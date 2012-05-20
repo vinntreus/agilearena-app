@@ -1,7 +1,7 @@
 # Agile arena 
 This implementation is in nodejs
 
-## To set up
+## Setup
 1. Download and install [nodejs](http://nodejs.org/)
 2. Download and setup [mongodb](http://www.mongodb.org/downloads) (currently 2.0.5)
 3. Clone this repo
