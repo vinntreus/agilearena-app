@@ -1,16 +1,12 @@
-var home = require('./features/startpage/home_controller');
-var login = require('./features/login-logout/login_controller');
-var registerUser = require('./features/register-user/user_registration_controller');
-var backlog = require('./features/backlog/backlog_controller');
-
 var auth = require('./authentication');
+var features = require('./dir_loader').load('./features/');
 
 exports.map = function(app, passport){
   //root
-  app.get('/', auth.ensureAuthenticated, home.index);
+  app.get('/', auth.ensureAuthenticated, features.home_controller.index);
 
   //login
-  app.get('/login', login.login_get);  
+  app.get('/login', features.login_controller.login_get);  
   app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res) {
     res.redirect('/');
   });
@@ -22,17 +18,19 @@ exports.map = function(app, passport){
   });
 
   //register-user
-  app.get('/register', registerUser.index);
-  app.post('/register', registerUser.register);
+  app.get('/register', features.user_registration_controller.index);
+  app.post('/register', features.user_registration_controller.register);
+
+  //display backlog  
+  app.get('/backlogs/:id', auth.ensureAuthenticated, features.backlog_show.show);
 
   //create backlog
-  app.post('/backlog/create', auth.ensureAuthenticated, backlog.create_post); 
-  app.get('/backlog/create', auth.ensureAuthenticated, backlog.create_get); 
+  app.post('/backlog/create', auth.ensureAuthenticated, features.backlog_create.create_post); 
+  app.get('/backlog/create', auth.ensureAuthenticated, features.backlog_create.create_get); 
   
-  //display backlog
-  app.get('/backlogs/:id', auth.ensureAuthenticated, backlog.show);
+  
   //delete backlog
-  app.del('/backlogs/:id', auth.ensureAuthenticated, backlog.delete);
+  app.del('/backlogs/:id', auth.ensureAuthenticated, features.backlog_delete.delete);
   //admin backlog
-  app.get('/backlogs/:id/admin', auth.ensureAuthenticated, backlog.admin);
+  app.get('/backlogs/:id/admin', auth.ensureAuthenticated, features.backlog_admin.admin);
 };

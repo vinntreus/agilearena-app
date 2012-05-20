@@ -1,0 +1,9 @@
+.page-header
+  h1= 'Administration - ' + backlog.name
+
+form.well.form-inline(method='post', action='/backlogs/#{backlog._id}')
+  input(type='hidden', name='_method', value='delete')
+  .span4
+    label Complete removal 
+  .span4
+    button.btn.btn-danger(type='submit') Delete backlog

@@ -34,7 +34,9 @@ routes.map(app, passport);
 /*new compressor.minify({
     type: 'gcc',
     fileIn: ['./public/libs/jquery-1.7.2.js', 
-             './public/libs/bootstrap/js/bootstrap.js'],
+             './public/libs/bootstrap/js/bootstrap.js',
+             './public/libs/knockout-2.1.0.debug.js'
+            ],
     fileOut: './public/javascripts/scripts.js',
     callback: function(err){
         console.log("minify js errors",err);
@@ -43,8 +45,7 @@ routes.map(app, passport);
 // Using YUI Compressor
 new compressor.minify({
     type: 'yui',
-    fileIn: ['./public/site.css',
-             './public/libs/bootstrap/css/bootstrap.css', 
+    fileIn: ['./public/libs/bootstrap/css/bootstrap.css', 
              './public/libs/bootstrap/css/bootstrap-responsive.css'
              ],
     fileOut: './public/stylesheets/styles.css',
@@ -52,6 +53,7 @@ new compressor.minify({
         console.log("minify css errors", err);
     }
 });*/
+
 var port = process.env.PORT || 3000;
 app.listen(port, function(){
   console.log("Express server listening on port %d in %s mode", port, app.settings.env);
