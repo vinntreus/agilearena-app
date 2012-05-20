@@ -25,3 +25,21 @@ exports.create_post = function(req, res){
 
 	res.redirect('/backlogs/' + b._id);	
 };
+
+exports.admin = function(req, res){
+	Backlogs.findById(req.params.id, function(err, doc){
+		var model = {
+		  title : "Admin - " + doc.name,
+		  backlog : doc
+		};
+		res.render('./backlog/backlog_admin', model);
+	});	
+};
+
+
+//DELETE -> /backlogs/:id
+exports.delete = function(req, res){
+	Backlogs.remove({ _id : req.params.id, owner : req.user._id}, function(err, doc){		
+		res.render('./backlog/backlog_deleted', {title : "Deleted backlog"});
+	});	
+};

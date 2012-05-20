@@ -43,9 +43,10 @@ routes.map(app, passport);
 // Using YUI Compressor
 new compressor.minify({
     type: 'yui',
-    fileIn: ['./public/libs/bootstrap/css/bootstrap.css', 
-             './public/libs/bootstrap/css/bootstrap-responsive.css',
-             './public/site.css'],
+    fileIn: ['./public/site.css',
+             './public/libs/bootstrap/css/bootstrap.css', 
+             './public/libs/bootstrap/css/bootstrap-responsive.css'
+             ],
     fileOut: './public/stylesheets/styles.css',
     callback: function(err){
         console.log("minify css errors", err);

@@ -30,5 +30,9 @@ exports.map = function(app, passport){
   app.get('/backlog/create', auth.ensureAuthenticated, backlog.create_get); 
   
   //display backlog
-  app.get('/backlogs/:id', backlog.show);   
+  app.get('/backlogs/:id', auth.ensureAuthenticated, backlog.show);
+  //delete backlog
+  app.del('/backlogs/:id', auth.ensureAuthenticated, backlog.delete);
+  //admin backlog
+  app.get('/backlogs/:id/admin', auth.ensureAuthenticated, backlog.admin);
 };
