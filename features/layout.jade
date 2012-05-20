@@ -1,0 +1,15 @@
+doctype 5
+html(lang="en")
+  head
+    title= title
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/stylesheets/styles.css")
+  body
+    div.navbar.navbar-fixed-top
+      div.navbar-inner
+        div.container-fluid
+          include heading
+          if (typeof user !== 'undefined')
+            include heading-user-dropdown
+    .container-fluid!= body
+    script(src="/javascripts/scripts.js")

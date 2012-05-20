@@ -1,0 +1,19 @@
+.row-fluid
+  .span3 &nbsp;
+  .span6.hero-unit
+    .page-header
+      h1 Login
+    form(method='post', action='/login')
+      div.control-group
+        label Username:
+        input.span12(type="text", name='username', autofocus='true')
+      div.control-group
+        label Password:
+        input.span12(type="password", name='password')
+      div.form-actions
+        p.span6
+          button.btn.btn-primary(type="submit") Login          
+        p.span6
+          a.btn(href="/register") Sign up
+  .span3 &nbsp;
+        
