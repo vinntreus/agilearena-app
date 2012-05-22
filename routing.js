@@ -23,14 +23,14 @@ exports.map = function(app, passport){
 
   //display backlog  
   app.get('/backlogs/:id', auth.ensureAuthenticated, features.backlog_show.show);
-
   //create backlog
   app.post('/backlog/create', auth.ensureAuthenticated, features.backlog_create.create_post); 
-  app.get('/backlog/create', auth.ensureAuthenticated, features.backlog_create.create_get); 
-  
-  
+  app.get('/backlog/create', auth.ensureAuthenticated, features.backlog_create.create_get);
   //delete backlog
   app.del('/backlogs/:id', auth.ensureAuthenticated, features.backlog_delete.delete);
   //admin backlog
   app.get('/backlogs/:id/admin', auth.ensureAuthenticated, features.backlog_admin.admin);
+
+  //create backlog-item
+  app.post('/backlog-item/create', auth.ensureAuthenticated, features.backlog_item_create.create); 
 };
