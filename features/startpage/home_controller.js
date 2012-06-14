@@ -1,19 +1,24 @@
-var Backlogs = require('../../domain/backlog');
+var db = require(NODE_APPDIR + '/db');
 
-var home_controller = {
-  index : function(req, res){    
-    Backlogs.find({owner : req.user._id}, function(err, doc){
-      
-      var viewModel = {
-        title : "Home",
-        user : req.user,
-        backlogs : doc,
-        backlog_count : doc.length
-      };
 
-      res.render('./startpage/home', viewModel);
-    });    
-  }
+//ROUTES
+exports.route = function(options){
+  options.app.get('/', options.auth.ensureAuthenticated, index);
 };
 
-exports.index = home_controller.index;
+//ACTIONS
+var index = function(req, res){
+
+  console.log(req.user);
+
+  db.collection('backlogs').find({owner : req.user._id}).toArray(function(err, docs){
+    //console.log("backlogs found: ", docs);
+    var viewModel = {
+      title : "Home",
+      user : req.user,
+      backlogs : docs || [],
+      backlog_count : docs.length
+    };
+    res.render('./startpage/home', viewModel);  
+  });  
+};

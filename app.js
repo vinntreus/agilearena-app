@@ -1,9 +1,11 @@
+NODE_APPDIR = __dirname;
 var express = require('express');
 var routes = require('./routing');
 var compressor = require('node-minify');
 var app = module.exports = express.createServer();
 var passport = require('passport');
 var authentication = require('./authentication');
+
 
 // Configuration
 app.configure(function(){
@@ -18,6 +20,8 @@ app.configure(function(){
   app.use(passport.session());
   app.use(app.router);  
 });
+
+
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));

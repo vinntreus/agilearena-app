@@ -1,6 +1,11 @@
 .page-header
   h1= title
 
+- if(typeof error !== 'undefined')
+  div.alert.alert-error
+    strong Could not create: 
+    #{error}
+
 form.well(method='post', action='/backlog/create')
   div.block
     label Name:

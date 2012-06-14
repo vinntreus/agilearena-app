@@ -4,6 +4,12 @@
       i.icon-wrench
       = ' Admin'
 
+.item-count History
+.history
+  each event,i in events
+    li 
+      a(href="/backlogs/#{backlog._id}/#{i}")#{event.type} (#{event.created})
+
 form.well(method='post', action='/backlog-item/create', data-bind='submit: addItem', id='add_backlogitem')
   input(type="hidden", name='backlog_id', value='#{backlog._id}')
   div.block
@@ -11,30 +17,34 @@ form.well(method='post', action='/backlog-item/create', data-bind='submit: addIt
     input(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"')
   div.block
     button.btn.btn-primary(type="submit") Ok
+ul
+  each item in backlog.items
+    li 
+      span #{item.description}
+//-
+  ul(data-bind='foreach: items')
+    li 
+      span(data-bind="text: description")
 
-ul(data-bind='foreach: items')
-  li 
-    span(data-bind="text: description")
+  script(type='text/javascript')
+    /*var backlogViewModel = function(items){
+      this.items = ko.observableArray(items);
+      this.itemToAdd = ko.observable("");
+      this.addItem = function() {
+          var form = $("#add_backlogitem");
+          var data = form.serialize();
+          var url = form.attr("action");
+          var self = this;
 
-script(type='text/javascript')
-  var backlogViewModel = function(items){
-    this.items = ko.observableArray(items);
-    this.itemToAdd = ko.observable("");
-    this.addItem = function() {
-        var form = $("#add_backlogitem");
-        var data = form.serialize();
-        var url = form.attr("action");
-        var self = this;
-
-        if (this.itemToAdd() != "") {
-            this.items.push({ description : this.itemToAdd() }); 
-            $.post(url, data, function(d){
-              self.itemToAdd("");
-            });
-        }
-        
-        return false;
-    }.bind(this); 
-  }
-  var backlogItems = !{JSON.stringify(backlogItems)}; 
+          if (this.itemToAdd() != "") {
+              this.items.push({ description : this.itemToAdd() }); 
+              $.post(url, data, function(d){
+                self.itemToAdd("");
+              });
+          }
+          
+          return false;
+      }.bind(this);*/
+    }
+    var backlogItems = !{JSON.stringify(backlogItems)}; 
   

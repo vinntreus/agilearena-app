@@ -1,40 +1,81 @@
 var sechash = require('sechash');
-var Users = require('../../domain/user')
+var db = require(NODE_APPDIR + '/db');
 
-var validate = function(user, onSuccess, onFailure){
+exports.register = function(userData, options){
+
+  validate(userData,{
+    success : function(user){
+      var hash = sechash.basicHash('sha1', user.password);
+      var newUser = {
+        username : user.username,
+        password : hash
+      };
+      
+      storeUser(newUser, options);
+    },
+    failure : function(error){
+      options.failure(error);
+    }
+  });
+  
+};
+
+var validate = function(user, options){
   user = user || { username : "", password : ""};
   
   if(user.username === ''){
-    return onFailure("Need username");
+    return options.failure("Need username");
   }
   if(user.password === ''){
-    return onFailure("Need password");
+    return options.failure("Need password");
   }
 
-  Users.findOne({ username : user.username}, function(err, doc){    
+  db.collection('users').findOne({ username : user.username}, function(err, doc){    
     if(err != null){
-      console.log("Errors trying to find users", err);  
-      return onFailure("Problems connecting to database");
+      console.log("ERROR [user_registration::validate] => Errors trying to find users", err);  
+      return options.failure("Problems connecting to database");
     }
     if(doc != null){
-      return onFailure("User already exists");
+      console.log("INFO [user_registration::validate] => Tried to create duplicate user", doc);
+      return options.failure("User already exists");
     }
-    onSuccess(user);
+    options.success(user);
   });  
 };
 
-exports.register = function(userData, onSuccess, onFailure){
-  validate(userData, function(user){
-    var hash = sechash.basicHash('sha1', user.password);
-    var newUser = new Users();
-    newUser.username = user.username;
-    newUser.password = hash;
-    newUser.save(function(err){
-      if(err == null){
-        console.log("created user", newUser);
-        return onSuccess(newUser);    
-      }        
-      return onFailure("Troubles saving user to db");
-    });    
-  }, onFailure);
-};
+var storeUser = function(user, options){  
+  db.collection('users').insert(user, function(userErr, userResult){
+    if(userErr != null){
+      console.log("ERROR [user_registration::storeUser] => Could not store user", userErr);
+      db.close();
+      return options.failure("Could not save user");
+    }
+
+    storeCreatedUserEvent(user, userResult[0], options);      
+  });
+}
+
+var storeCreatedUserEvent = function(userData, user, options){
+  //assume user is just saved, now we create the event
+  var userEvent = {
+    aggregateId : user._id,
+    type : "User",
+    created : new Date(),
+    data : user,
+    events :[],
+    getAggregate : function(modelCtor){
+      return new modelCtor(this.data);
+    }          
+  };
+  //store the event (including its functions)
+  db.collection('events').insert(userEvent, {safe:true, serializeFunctions:true}, function(eventErr, eventResult){
+    db.close();
+    
+    if(eventErr != null){
+      console.log("ERROR [user_registration::storeCreatedUserEvent] => Could not store create-user-event", userErr);      
+      return options.failure("Could not save user-event");
+    }          
+    //both event and user is saved, now we return success
+    options.success(user);
+  });       
+}

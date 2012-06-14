@@ -1,17 +1,13 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema
+function Backlog (options){
+  this._id = options._id;
+  this.name = options.name;
+  this.owner = options.owner;
+  this.created = options.created;
+  this.items = options.items || [];
+};
 
-var BacklogItemSchema = new mongoose.Schema({
-  description : String,
-  created : { type : Date, default : Date.now }
-});
+Backlog.prototype.addItem = function(item){
+  this.items.push(item);
+};
 
-var BacklogSchema = new mongoose.Schema({
-  name : String,
-  owner : Schema.ObjectId,
-  created : { type : Date, default : Date.now },
-  items : [BacklogItemSchema]
-});
-var Backlogs = mongoose.model('Backlog', BacklogSchema);
-
-module.exports = Backlogs;
+module.exports = Backlog;

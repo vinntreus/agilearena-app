@@ -1,15 +1,18 @@
-var Users = require('./domain/user');
+var db = require(NODE_APPDIR + '/db');
+var User = require(NODE_APPDIR + '/domain/user');
 var LocalStrategy = require('passport-local').Strategy;
 
 exports.setup = function(passport){
   //authentication
   passport.use(new LocalStrategy(
-    function(username, password, done) {      
-      Users.findOne({ username: username }, function(err, user) {
+    function(username, password, done) {        
+      db.collection('users').findOne({ username: username }, function(err, doc) {
         if (err) { return done(err); }
-        if (!user) {
+        if (!doc) {
           return done(null, false, { message: 'Unknown user' });
         }
+        var user = new User(doc);
+
         if (!user.validPassword(password)) {
           return done(null, false, { message: 'Invalid password' });
         }

@@ -1,22 +1,32 @@
 var registration = require("./user_registration");
+var passport;
 
-var user_registration_controller = {
-
-  index : function(req, res){
-    res.render("./register-user/user_registration", {title : "Register"});
-  },
-  register : function(req, res){
-    console.log("registers user", req.body.user);
-    
-    registration.register(req.body.user, 
-      function(user){
-        res.render("./register-user/registered_user", {title : "Successfully registered", user : user});
-    }, function(error){
-        res.render("./register-user/user_registration", {title : "Register", error : error});
-    });
-
-  }
+//ROUTING
+exports.route = function(options){
+  passport = options.passport;
+  options.app.get('/register', index);
+  options.app.post('/register', register);
 };
 
-exports.index = user_registration_controller.index;
-exports.register = user_registration_controller.register;
+//ACTIONS
+var index = function(req, res){
+  render_registration_view(res, {title : "Register"});
+};
+
+var register = function(req, res, next){  
+  registration.register(req.body.user, {
+    success : function(user) {  
+       req.logIn(user, function(err) {
+        return res.redirect('/');
+      });
+    },
+    failure : function(error){
+      res.render("./register-user/user_registration", {title : "Register", error : error});
+    } 
+  });
+};
+
+//RENDER VIEW HELPER
+var render_registration_view = function(res, model){
+  res.render("./register-user/user_registration", model);
+};
