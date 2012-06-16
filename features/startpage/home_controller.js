@@ -12,12 +12,12 @@ var index = function(req, res){
   console.log(req.user);
 
   db.collection('backlogs').find({owner : req.user._id}).toArray(function(err, docs){
-    //console.log("backlogs found: ", docs);
+    var b = docs || [];
     var viewModel = {
       title : "Home",
       user : req.user,
-      backlogs : docs || [],
-      backlog_count : docs.length
+      backlogs : b,
+      backlog_count : b.length
     };
     res.render('./startpage/home', viewModel);  
   });  
