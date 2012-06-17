@@ -1,5 +1,7 @@
 var db = require(NODE_APPDIR + '/db');
 var Backlog = require(NODE_APPDIR + '/domain/backlog');
+var format = require('dateformat');
+var types = { CreatedBacklog : "Created backlog", CreatedBacklogItemEvent : "Added item"};
 
 
 //ROUTES
@@ -12,17 +14,10 @@ exports.route = function(options){
 
 //ACTIONS
 var show = function(req, res){
-  db.collection('backlogs').findById(req.params.id, function(err, doc){    
-    var backlogItems = [];
-
-    doc.items.forEach(function(i){      
-      backlogItems.push({ description : i.description });
-    });
-
+  db.collection('backlogs').findById(req.params.id, function(err, doc){
     var model = {
       title : "Backlog - " + doc.name,
-      backlog : doc,
-      backlogItems : backlogItems
+      backlog : doc      
     };
     res.render('./backlog/show/backlog_show', model);    
   }); 
@@ -34,18 +29,27 @@ var version = function(req, res){
   db.collection('events').findOne({ aggregateId : backlogId } , {raw:true}, function(err, backlogEvents){
       var backlogEventRoot = db.bson_serializer.BSON.deserialize(backlogEvents, {evalFunctions:true, cacheFunctions:true});            
       var backlog = backlogEventRoot.getAggregate(Backlog);
+      var events = [];
+      var e;
 
-      for(var i = 0, length = backlogEventRoot.events.length; i < length; i++){
-        backlogEventRoot.events[i].run(backlog);
-        if(i >= req.params.version)
-          break;
+      for(var i = 0, length = backlogEventRoot.events.length; i < length; i++){        
+        e = backlogEventRoot.events[i];
+        if(i <= req.params.version){
+          e.run(backlog);
+        }        
+        console.log(req.user);
+        events.push({ type : types[e.type], 
+                      created : format(e.created, "yyyy-dd-mm HH:MM:ss"),
+                      createdBy : e.data.createdBy || ""
+                    });
       }      
 
       var model = {
         title : "Backlog - " + backlog.name,
         backlog : backlog,        
-        events : backlogEventRoot.events
+        events : events,
+        currentVersion : req.params.version
       };
-      res.render('./backlog/show/backlog_show', model);
+      res.render('./backlog/show/backlog_version', model);
   });
 };

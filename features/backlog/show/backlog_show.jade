@@ -3,6 +3,7 @@
     a.btn.pull-right(href="/backlogs/#{backlog._id}/admin")
       i.icon-wrench
       = ' Admin'
+    a.btn.pull-right(href="/backlogs/#{backlog._id}/0") History
   
 
 form.well.form-inline(method='post', action='/backlog-item/create', data-bind='submit: addItem', id='add_backlogitem')
@@ -34,13 +35,6 @@ table.table.table-condensed.backlog-items
                 a(href='#', data-action='delete') Delete
 
 
-//
-  ul.nav.nav-tabs.nav-stacked(data-bind='foreach: items')
-  li 
-    span(data-bind="text: description")
-    button.btn.btn-mini.dropdown-toggle(data-toggle="dropdown")
-      span.caret
-
 script(type='text/javascript')
   var backlogViewModel = function(items){
     this.items = ko.observableArray(items);
@@ -61,4 +55,4 @@ script(type='text/javascript')
         return false;
     }.bind(this);
   }
-  var backlogItems = !{JSON.stringify(backlogItems)}; 
+  var backlogItems = !{JSON.stringify(backlog.items)}; 

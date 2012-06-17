@@ -11,6 +11,8 @@ exports.route = function(options){
 var create_backlogitem = function(req, res){
 
   var backlog_item = req.body.backlog_item;
+  backlog_item.createdBy = req.user.username;
+  backlog_item.createdById = req.user._id;
   var backlog_id = db.toObjectID(req.body.backlog_id);
 
   db.collection('backlogs').update({_id: backlog_id}, {$push: {items:backlog_item}}, function(err, backlog){

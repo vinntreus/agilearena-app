@@ -18,3 +18,8 @@ table.backlog-items td
 {
   vertical-align: middle;
 }
+
+.nav > li > a:hover {
+  text-decoration: none;
+  background-color: #EEE;
+}
