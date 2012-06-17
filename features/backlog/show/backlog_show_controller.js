@@ -39,7 +39,7 @@ var version = function(req, res){
           e.run(backlog);
         }        
         events.push({ type : types[e.type], 
-                      created : format(e.created, "yyyy-dd-mm HH:MM:ss"),
+                      created : format(e.created, "yyyy-mm-dd HH:MM:ss"),
                       createdBy : e.data.createdBy || ""
                     });
       }      
