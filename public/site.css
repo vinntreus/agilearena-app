@@ -9,3 +9,12 @@
 .btn{
   margin-right:4px;
 }
+
+.btn-toolbar .btn-group .backlog-item-action
+{
+  margin-left:10em;
+}
+table.backlog-items td
+{
+  vertical-align: middle;
+}
