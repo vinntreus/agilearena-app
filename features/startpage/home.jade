@@ -1,11 +1,13 @@
-.span6
-  .well
-    ul.nav.nav-list
-      li.nav-header 
-        span.pull-right
-          a.btn.btn-mini.btn-primary(href='/backlog/create', title='Create new backlog') New backlog
-        span.badge #{backlog_count}
-        span  Backlogs
-      each b in backlogs
-        li 
-          a(href="/backlogs/#{b._id}") #{b.name}
+
+.well
+  ul.nav.nav-list
+    li.nav-header 
+      span.pull-right
+        a.btn.btn-mini(href='/backlog/create', title='Create new backlog')
+          i.icon-plus
+          ="New backlog"
+      span.badge #{backlog_count}
+      span  Backlogs
+    each b in backlogs
+      li 
+        a(href="/backlogs/#{b._id}") #{b.name}
