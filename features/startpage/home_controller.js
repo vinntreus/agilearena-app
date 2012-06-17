@@ -8,9 +8,6 @@ exports.route = function(options){
 
 //ACTIONS
 var index = function(req, res){
-
-  console.log(req.user);
-
   db.collection('backlogs').find({owner : req.user._id}).toArray(function(err, docs){
     var b = docs || [];
     var viewModel = {

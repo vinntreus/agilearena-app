@@ -37,7 +37,6 @@ var version = function(req, res){
         if(i <= req.params.version){
           e.run(backlog);
         }        
-        console.log(req.user);
         events.push({ type : types[e.type], 
                       created : format(e.created, "yyyy-dd-mm HH:MM:ss"),
                       createdBy : e.data.createdBy || ""
