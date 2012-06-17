@@ -17,7 +17,8 @@ var show = function(req, res){
   db.collection('backlogs').findById(req.params.id, function(err, doc){
     var model = {
       title : "Backlog - " + doc.name,
-      backlog : doc      
+      backlog : doc,
+      user : req.user,
     };
     res.render('./backlog/show/backlog_show', model);    
   }); 
@@ -47,7 +48,8 @@ var version = function(req, res){
         title : "Backlog - " + backlog.name,
         backlog : backlog,        
         events : events,
-        currentVersion : req.params.version
+        currentVersion : req.params.version,
+        user : req.user,
       };
       res.render('./backlog/show/backlog_version', model);
   });

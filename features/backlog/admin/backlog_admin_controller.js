@@ -13,7 +13,8 @@ var admin = function(req, res){
   db.collection('backlogs').findById(req.params.id, function(err, doc){
     var model = {
       title : "Admin - " + doc.name,
-      backlog : doc
+      backlog : doc,
+      user : req.user
     };
     res.render('./backlog/admin/backlog_admin', model);
   }); 

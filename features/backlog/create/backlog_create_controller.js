@@ -11,14 +11,14 @@ exports.route = function(options){
 
 //ACTIONS
 var create_get = function(req, res){
-  res.render('./backlog/create/backlog_create', { title : "Create backlog"});
+  res.render('./backlog/create/backlog_create', { title : "Create backlog", user : req.user});
 };
 
 var create_post = function(req, res){ 
 
   var backlogData = {    
     name : req.body.backlog.name,
-    owner : req.user._id
+    owner : req.user._id    
   }; 
 
   backlogCreator.create(backlogData, {
@@ -26,7 +26,7 @@ var create_post = function(req, res){
       res.redirect('/backlogs/' + backlogId);
     },
     failure : function(error){
-      res.render('./backlog/create/backlog_create', { title : "Create backlog", error : err});
+      res.render('./backlog/create/backlog_create', { title : "Create backlog", error : error, user : req.user});
     }
   });   
 };
