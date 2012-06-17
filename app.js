@@ -49,7 +49,7 @@ routes.map(app, passport);
 // Using YUI Compressor
 new compressor.minify({
     type: 'yui',
-    fileIn: ['./public/libs/bootstrap/css/bootstrap.css', 
+    fileIn: ['./public/libs/bootstrap-simplex/bootstrap.css', 
              './public/libs/bootstrap/css/bootstrap-responsive.css'
              ],
     fileOut: './public/stylesheets/styles.css',
