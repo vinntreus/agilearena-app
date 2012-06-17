@@ -22,8 +22,7 @@ var show = function(req, res){
     var model = {
       title : "Backlog - " + doc.name,
       backlog : doc,
-      backlogItems : backlogItems,
-      events : []
+      backlogItems : backlogItems
     };
     res.render('./backlog/show/backlog_show', model);    
   }); 
