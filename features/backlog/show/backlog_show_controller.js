@@ -1,7 +1,11 @@
 var db = require(NODE_APPDIR + '/db');
 var Backlog = require(NODE_APPDIR + '/domain/backlog');
 var format = require('dateformat');
-var types = { CreatedBacklog : "Created backlog", CreatedBacklogItemEvent : "Added item"};
+var types = { 
+  CreatedBacklog : "Created backlog", 
+  CreatedBacklogItemEvent : "Added item",
+  DeletedBacklogItemEvent : "Removed item"
+};
 
 
 //ROUTES

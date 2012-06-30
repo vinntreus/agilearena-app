@@ -4,9 +4,8 @@ var db = require(NODE_APPDIR + '/db');
 exports.route = function(options){
   var app = options.app;
   var auth = options.auth;
-  app.post('/backlog-item/create', auth.ensureAuthenticated, create_backlogitem); 
-  app.post('/backlog-item/delete', auth.ensureAuthenticated, delete_backlogitem); 
-}
+  app.post('/backlog-item/create', auth.ensureAuthenticated, create_backlogitem);   
+};
 
 //ACTIONS
 var create_backlogitem = function(req, res){
@@ -28,17 +27,12 @@ var create_backlogitem = function(req, res){
           backlog.items.push(this.data);
         }     
       };
-
-      db.collection('events').update({ aggregateId : backlog_id}, {$push: {events:createBacklogitemEvent}}, {safe:true, serializeFunctions:true}, function(err, ev){        
+      db.addEvent(backlog_id, createBacklogitemEvent, function(err, ev){
         res.send({ "_id" : backlog_item._id }, 200);
-      });    
+      });
     }
     else{
       res.send('Could not create item', 500);
     }
   }); 
-};
-
-var delete_backlogitem = function(req, res){
-  res.send({backlog: req.body.backlog_id, items : req.body.items });
 };
