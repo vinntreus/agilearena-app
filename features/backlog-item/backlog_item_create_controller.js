@@ -9,7 +9,6 @@ exports.route = function(options){
 
 //ACTIONS
 var create_backlogitem = function(req, res){
-
   var backlog_item = req.body.backlog_item;
   var backlog_id = db.toObjectID(req.body.backlog_id);
 
@@ -28,9 +27,12 @@ var create_backlogitem = function(req, res){
         }     
       };
 
-      db.collection('events').update({ aggregateId : backlog_id}, {$push: {events:createBacklogitemEvent}}, {safe:true, serializeFunctions:true}, function(err, ev){
-        res.redirect('/backlogs/' + backlog_id); 
+      db.collection('events').update({ aggregateId : backlog_id}, {$push: {events:createBacklogitemEvent}}, {safe:true, serializeFunctions:true}, function(err, ev){        
+        res.send('');
       });    
+    }
+    else{
+      res.send('Could not create item', 500);
     }
   }); 
 };

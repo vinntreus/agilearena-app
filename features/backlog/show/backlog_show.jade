@@ -14,7 +14,7 @@
       = ' '
       button.btn(type="submit") Save
   div.toolbar
-    button.btn.btn-danger(data-bind='visible: selectedItems().length > 0') Delete
+    button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeSelection') Delete
 table.table.table-condensed.backlog-items
   thead
     tr

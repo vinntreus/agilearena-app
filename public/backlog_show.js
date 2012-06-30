@@ -31,8 +31,22 @@ var Backlog = function(items){
   this.createItem = function(item, onSuccess){
     this.items.push(item); 
     var data = this.getAddItemData();
-    $.post(this.addItemUrl, data, onSuccess);
+    $.post(this.addItemUrl, data, onSuccess)
+    .error(function(e){      
+      alert(e.responseText);
+    });
   };
+
+  this.removeSelection = function(){
+    var selection = this.selectedItems();
+    var that = this;
+
+
+    selection.forEach(function(s){
+      that.items.remove(s);
+    });
+
+  }.bind(this);
 };
 
 var BacklogItem = function(options){
