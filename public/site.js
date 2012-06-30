@@ -12,7 +12,7 @@ if(typeof backlogItems != 'undefined'){
       var self = this;
 
       if (this.itemToAdd() != "") {
-          this.items.push({ description : this.itemToAdd() }); 
+          this.items.push(new BacklogItem({ description : this.itemToAdd() })); 
           $.post(url, data, function(d){
             self.itemToAdd("");
           });
