@@ -28,5 +28,8 @@ table.table.table-condensed.backlog-items
       td(data-bind="text: $index() + 1")
       td(data-bind="text: description")
 
+script(type='text/javascript', src='/backlog_show.js')
 script(type='text/javascript')
-  var backlogItems = !{JSON.stringify(backlog.items)};  
+  var backlogItems = !{JSON.stringify(backlog.items)};
+  var view = new BacklogView(backlogItems);
+  view.init();
