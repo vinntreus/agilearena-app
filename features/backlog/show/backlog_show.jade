@@ -7,7 +7,7 @@
   
 .well
   form.form-inline(method='post', action='/backlog-item/create', data-bind='submit: addItem', id='add_backlogitem')
-    input(type="hidden", name='backlog_id', value='#{backlog._id}')  
+    input(type="hidden", id='backlog_id', name='backlog_id', value='#{backlog._id}')  
     .controls
       span= 'Add item '
       input.input-xlarge(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"') 

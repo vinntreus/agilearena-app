@@ -3,12 +3,13 @@ var Backlog = function(items){
   this.itemToAdd = ko.observable("");
 
   this.addItem = function() {
-    var self = this;
-    var item;
+    var self = this;    
 
     if (this.itemToAdd() != "") {      
-      item = new BacklogItem({ description : this.itemToAdd() });
-      this.createItem(item, function(){
+      
+      this.createItem(function(data){
+        var item = new BacklogItem({ description : self.itemToAdd(), _id : data._id });
+        self.items.push(item);
         self.itemToAdd("");
       });        
     }
@@ -28,8 +29,7 @@ var Backlog = function(items){
     return this.addItemForm.serialize();
   };
 
-  this.createItem = function(item, onSuccess){
-    this.items.push(item); 
+  this.createItem = function(onSuccess){     
     var data = this.getAddItemData();
     $.post(this.addItemUrl, data, onSuccess)
     .error(function(e){      
@@ -37,19 +37,29 @@ var Backlog = function(items){
     });
   };
 
+  //note use of ES5 [map, forEach]
   this.removeSelection = function(){
     var selection = this.selectedItems();
-    var that = this;
+    var that = this;        
+    var itemIds = selection.map(function(s){
+      return s._id;
+    });
+    var backlogId = $("#backlog_id").val();
+    var data = {backlog_id : backlogId, items : itemIds};    
 
-
-    selection.forEach(function(s){
-      that.items.remove(s);
+    $.post('/backlog-item/delete', data, function(d){
+      selection.forEach(function(s){
+        that.items.remove(s);
+      });
+    }).error(function(r){
+      alert(r.responseText);
     });
 
   }.bind(this);
 };
 
 var BacklogItem = function(options){
+  this._id = options._id;
   this.description = options.description;
   this.isSelected = ko.observable(false);    
 };

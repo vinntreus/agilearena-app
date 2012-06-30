@@ -5,13 +5,15 @@ exports.route = function(options){
   var app = options.app;
   var auth = options.auth;
   app.post('/backlog-item/create', auth.ensureAuthenticated, create_backlogitem); 
+  app.post('/backlog-item/delete', auth.ensureAuthenticated, delete_backlogitem); 
 }
 
 //ACTIONS
 var create_backlogitem = function(req, res){
-  var backlog_item = req.body.backlog_item;
+  var backlog_item = req.body.backlog_item;  
   var backlog_id = db.toObjectID(req.body.backlog_id);
 
+  backlog_item._id = new db.ObjectID();
   backlog_item.createdBy = req.user.username;
   backlog_item.createdById = req.user._id;
 
@@ -28,11 +30,15 @@ var create_backlogitem = function(req, res){
       };
 
       db.collection('events').update({ aggregateId : backlog_id}, {$push: {events:createBacklogitemEvent}}, {safe:true, serializeFunctions:true}, function(err, ev){        
-        res.send('');
+        res.send({ "_id" : backlog_item._id }, 200);
       });    
     }
     else{
       res.send('Could not create item', 500);
     }
   }); 
+};
+
+var delete_backlogitem = function(req, res){
+  res.send({backlog: req.body.backlog_id, items : req.body.items });
 };
