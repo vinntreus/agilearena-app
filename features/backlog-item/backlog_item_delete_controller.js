@@ -8,50 +8,56 @@ exports.route = function(options){
 };
 
 //ACTIONS
-var delete_backlogitem = function(req, res){
-  //res.send({backlog: req.body.backlog_id, items : req.body.items });
-  var backlog_id = db.toObjectID(req.body.backlog_id);
-  var items = req.body.items;  
+var delete_backlogitem = function(req, res){  
+  var options = { 
+  	backlog_id : db.toObjectID(req.body.backlog_id),
+  	items : req.body.items,
+  	created_by : req.user.username,
+  	created_by_id : db.toObjectID(req.user._id)
+  };
 
-  items.forEach(function(item_id){
-  	var backlog_item_id = db.toObjectID(item_id);
-  	var query = {'_id': backlog_id};
-  	var data = {'$pull': { items : {'_id': backlog_item_id } } };
-  	db.collection('backlogs').update(query, data, function(err, backlog){
-	    if(err == null){
-	    	console.log("removed backlogitem");
-	    	on_deleted(backlog_id, backlog_item_id, res);
+  delete_items(options, function(){
+		res.send('', 200);
+  });	
+
+};
+
+var delete_items = function(options, callback){
+		var backlog_item_id = db.toObjectID(options.items.pop());  	
+  	var query = {'$pull': { items : {'_id': backlog_item_id } } };
+
+  	db.updateBacklog(options.backlog_id, query, function(err, backlog){
+	    if(err == null){	    	
+	    	var on_deleted_event = get_on_deleted_event({ id : backlog_item_id, createdBy : options.created_by }, options.created_by_id);
+	    	db.addEvent(options.backlog_id, on_deleted_event, function(err, ev){
+					if(err != null){
+						console.log("could not add deleted event");
+						throw err;			
+					}
+					if(options.items.length > 0){ //have more items to delete
+						delete_items(options, callback);
+					}
+					else{
+						callback();
+					}
+	    	});
 	    }
 	    else{
-	    	console.log("COULD NOT REMOVE");
+	    	console.log("Count not delete backlogitem");
+	    	throw err;
 	    }
   	});
-  });   
+}
 
-};
-
-var on_deleted = function(backlog_id, item_id, res){
-	var deleted_event = get_on_deleted_event(item_id);
-	db.addEvent(backlog_id, deleted_event, function(err, ev){
-		if(err == null){
-			console.log("added deleted event");			
-			res.send('', 200);
-		}
-		else{
-			console.log("COULD NOT add deleted event");
-		}
-	});
-};
-var get_on_deleted_event = function(item_id){
-	return {
-		_id : new db.ObjectID(),
-		type : "DeletedBacklogItemEvent",
-		created : new Date(),
-		data : item_id,
+var get_on_deleted_event = function(data, userId){
+	return {		
+		type : "DeletedBacklogItemEvent",		
+		createdById : userId,
+		data : data,
 		run : function(backlog){
-			var that = this;			
+			var removedItem = this.data.id;
 			backlog.items = backlog.items.filter(function(item){
-				return item._id !== that.data;
+				return item._id.toString() !== removedItem.toString();
 			});
 		}
 	};
