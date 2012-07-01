@@ -16,12 +16,10 @@ var create_backlogitem = function(req, res){
   backlog_item.createdBy = req.user.username;
   backlog_item.createdById = req.user._id;
 
-  db.collection('backlogs').update({_id: backlog_id}, {$push: {items:backlog_item}}, function(err, backlog){
+  db.updateBacklog(backlog_id, {$push: {items:backlog_item}}, function(err, backlog){
     if(err == null){
-      var createBacklogitemEvent = {
-        _id : new db.ObjectID(),
-        type : "CreatedBacklogItemEvent",
-        created : new Date(),
+      var createBacklogitemEvent = {        
+        type : "CreatedBacklogItemEvent",        
         data : backlog_item,
         run : function(backlog){
           backlog.items.push(this.data);
