@@ -10,7 +10,7 @@ exports.route = function(options){
 
 //ACTIONS
 var admin = function(req, res){
-  db.collection('backlogs').findById(req.params.id, function(err, doc){
+  db.backlogs.findById(req.params.id, function(err, doc){
     var model = {
       title : "Admin - " + doc.name,
       backlog : doc,

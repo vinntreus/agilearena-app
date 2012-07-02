@@ -13,7 +13,7 @@ var delete_backlog = function(req, res){
   
   var backlogId = db.toObjectID(req.params.id); 
 
-  db.collection('backlogs').remove({ _id : backlogId, owner : req.user._id}, {safe:true}, function(err, numberOfRemovedDocs){   
+  db.backlogs.remove({ _id : backlogId, owner : req.user._id}, {safe:true}, function(err, numberOfRemovedDocs){   
     db.close();
     res.redirect('/');
   }); 
