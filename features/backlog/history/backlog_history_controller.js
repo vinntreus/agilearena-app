@@ -22,7 +22,7 @@ var history = function(req, res){
       currentVersion : version,
       user : user,
     };
-    res.render('./backlog/show/backlog_history', model);
+    res.render('./backlog/history/backlog_history', model);
   });
 
 };
