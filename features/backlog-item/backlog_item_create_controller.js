@@ -1,4 +1,4 @@
-var db = require(NODE_APPDIR + '/db');
+var handler = require('./backlog_item_create_handler');
 
 //ROUTES
 exports.route = function(options){
@@ -8,29 +8,18 @@ exports.route = function(options){
 };
 
 //ACTIONS
-var create_backlogitem = function(req, res){
-  var backlog_item = req.body.backlog_item;  
-  var backlog_id = db.toObjectID(req.body.backlog_id);
-
-  backlog_item._id = new db.ObjectID();
+var create_backlogitem = function(req, res){  
+  var backlog_id = req.body.backlog_id;
+  var backlog_item = req.body.backlog_item;
   backlog_item.createdBy = req.user.username;
   backlog_item.createdById = req.user._id;
 
-  db.updateBacklog(backlog_id, {$push: {items:backlog_item}}, function(err, backlog){
-    if(err == null){
-      var createBacklogitemEvent = {        
-        type : "CreatedBacklogItemEvent",        
-        data : backlog_item,
-        run : function(backlog){
-          backlog.items.push(this.data);
-        }     
-      };
-      db.addEvent(backlog_id, createBacklogitemEvent, function(err, ev){
-        res.send({ "_id" : backlog_item._id }, 200);
-      });
+  handler.createBacklogItem(backlog_id, backlog_item, function(error, itemId){
+    if(error != null){
+      res.send("Could not save item", 500);
     }
     else{
-      res.send('Could not create item', 500);
+      res.send({"_id" : itemId}, 200);
     }
-  }); 
+  });  
 };

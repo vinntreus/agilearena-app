@@ -15,14 +15,21 @@ var setObjectId = function(obj, prop){
 }
 
 db.updateBacklog = function(itemId, updateOperation, callback){
+	itemId = db.toObjectID(itemId);
 	var item = {'_id': itemId};
 	this.backlogs.update(item, updateOperation, callback);
+};
+
+db.addBacklogItem = function(backlogId, backlogItem, callback){	
+	setCreated(backlogItem);
+	db.updateBacklog(backlogId, {$push: {items:backlogItem}}, callback);
 };
 
 
 /*** Event store ***/
 
 db.addEvent = function(aggregateId, eventToSave, callback){
+	aggregateId = db.toObjectID(aggregateId);
 	var query = { aggregateId : aggregateId};
 	var params = {safe:true, serializeFunctions:true};	
 
