@@ -1,10 +1,28 @@
 var db = require(NODE_APPDIR + '/db');
 
 var createBacklogItemHandler = (function() {
-  //callback params = (error, backlog_item_id)
-  var createBacklogItem = function(options, callback) {
-    var create_backlogitem_event = buildEvent(options.backlog_item);
-    storeEvent(create_backlogitem_event, options, callback);
+
+/* @options :object
+/*      backlog_id : string
+/*      backlog_item : object[backlog_item]
+/*      created_by : object[user]
+/* @callback :function (error, backlog_item_id) */
+  var createBacklogItem = function(options, callback) {    
+    var backlogItem = {
+      description : options.backlog_item.description,
+      createdById : options.created_by._id
+    };    
+
+    db.getBacklog(options.backlog_id, function(backlog){
+      backlog.addItem(backlogItem, function(error){
+        if(error != null) {
+          return callback(error);
+        }        
+        var create_backlogitem_event = buildEvent(backlogItem);
+        var eventData = { event : create_backlogitem_event, created_by : options.created_by };
+        storeEvent(options.backlog_id, eventData, callback);
+      });
+    });
   };
 
   var buildEvent = function(backlog_item) {
@@ -17,29 +35,27 @@ var createBacklogItemHandler = (function() {
     };
   };
 
-  var storeEvent = function(create_backlogitem_event, options, callback) {
-    var eventData = { event : create_backlogitem_event, created_by : options.created_by };
-    db.addEvent(options.backlog_id, eventData, function(error) {
+  var storeEvent = function(backlogId, eventData, callback) {    
+    db.addEvent(backlogId, eventData, function(error, data) {
       if(error != null) {
         console.log("addEvent::create_backlogitem_event::Error::", error);
-        callback("Could not save item");
-      }
-      else {
-        var backlog_item_data = create_backlogitem_event.data;
-        updateReadModel(options.backlog_id, backlog_item_data, callback);
-      }
+        return callback("Could not store backlogitem");
+      }      
+      
+      updateReadModel(backlogId, data, callback);
     });
   };
 
   var updateReadModel = function(backlog_id, backlog_item_data, callback) {
     db.addBacklogItem(backlog_id, backlog_item_data, function(error) {
+      var errorMessage;
+
       if(error != null) {
         console.log("createBacklogItemHandler::updateReadModel::addBacklogItem::Error::", error);
-        callback("Could not save item");
+        errorMessage = "Could not save backlogitem";
       } 
-      else {
-        callback(null, backlog_item_data._id);
-      }
+      
+      callback(errorMessage, backlog_item_data._id);
     });
   };
 

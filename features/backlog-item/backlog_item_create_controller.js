@@ -18,9 +18,9 @@ var create_backlogitem = function(req, res){
 
   handler.createBacklogItem(options, function(error, itemId){
     if(error != null){
-      res.send("Could not save item", 500);
+      res.send(error, 500);
     }
-    else{
+    else {
       res.send({"_id" : itemId}, 200);
     }
   });  

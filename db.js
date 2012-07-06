@@ -1,6 +1,7 @@
 var mongo = require('mongoskin'),
-	  format = require('dateformat');
-    db = mongo.db('localhost:27017/agilearena?auto_reconnect');  
+	  format = require('dateformat'),
+    db = mongo.db('localhost:27017/agilearena?auto_reconnect'); 
+var Backlog = require(NODE_APPDIR + '/domain/backlog');
 
 db.events = db.collection('events');
 db.backlogs = db.collection('backlogs');
@@ -29,6 +30,12 @@ var setCreatedForEvent = function(event, createdBy){
 	}
 };
 
+db.getBacklog = function(backlogId, callback){
+	db.getAggregateRoot(backlogId, Backlog, null, function(backlog, events){
+		callback(backlog);
+	});
+};
+
 db.updateBacklog = function(itemId, updateOperation, callback){
 	itemId = db.toObjectID(itemId);
 	var item = {'_id': itemId};
@@ -53,7 +60,9 @@ db.addEvent = function(aggregateId, eventData, callback){
 
 	setCreatedForEvent(eventData.event, eventData.created_by);	
 
-	this.events.update(query, {'$push': { events : eventData.event}}, params, callback);
+	this.events.update(query, {'$push': { events : eventData.event}}, params, function(err, ev){
+		callback(err, eventData.event.data);
+	});
 }; 
 
 db.createAggregateRoot = function(root, createdEvent, callback){

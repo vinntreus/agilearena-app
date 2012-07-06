@@ -1,4 +1,7 @@
+var db = require(NODE_APPDIR + '/db');
+
 var deleteBacklogItemHandler = (function () {
+	
 	//options => { backlog_id:string, backlog_items_ids:[], created_by:user }
 	//callback => (error)
 	var deleteItems = function(options, callback){
