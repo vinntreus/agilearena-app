@@ -18,7 +18,7 @@ var create_post = function(req, res){
 
   var backlogData = {    
     name : req.body.backlog.name,
-    owner : req.user._id    
+    owner : req.user
   }; 
 
   backlogCreator.create(backlogData, {
