@@ -75,7 +75,13 @@ db.createAggregateRoot = function(root, createdEvent, callback){
 	});
 };
 
-db.getAggregateVersion = function(aggregateId, type, version, callback){
+/*
+/* @aggregateId: string
+/* @type : function constructor
+/* @version : number, null = all versions
+/* @callback : function(aggregate, events)
+*/
+db.getAggregateRoot = function(aggregateId, type, version, callback){
 	var id = db.toObjectID(aggregateId);
   db.events.findOne({ aggregateId : id } , {raw:true}, function(err, rawAggregate){
   	if(err != null)
@@ -90,7 +96,7 @@ db.getAggregateVersion = function(aggregateId, type, version, callback){
 
 var buildAggregateRoot = function(events, domainObj, version){			
 	var mappedEvents = events.map(function(e, index){			
-		if(index <= version && e.run){
+		if( (index <= version || version == null) && e.run){
 			domainObj = e.run(domainObj) || domainObj;
 		}
 		return { 

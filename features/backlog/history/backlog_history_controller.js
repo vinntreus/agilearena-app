@@ -14,7 +14,7 @@ var history = function(req, res){
   var version = req.params.version;
   var user = req.user;
 
-  db.getAggregateVersion(backlogId, Backlog, version, function(backlog, events){
+  db.getAggregateRoot(backlogId, Backlog, version, function(backlog, events){
     var model = {
       title : "Backlog - " + backlog.name,
       backlog : backlog,        
