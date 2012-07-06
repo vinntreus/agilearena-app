@@ -1,7 +1,7 @@
 var mongo = require('mongoskin'),
-	  format = require('dateformat'),
-    db = mongo.db('localhost:27017/agilearena?auto_reconnect'); 
-var Backlog = require(NODE_APPDIR + '/domain/backlog');
+	format = require('dateformat'),
+  db = mongo.db('localhost:27017/agilearena?auto_reconnect'),
+	Backlog = require(NODE_APPDIR + '/domain/backlog');
 
 db.events = db.collection('events');
 db.backlogs = db.collection('backlogs');
@@ -47,6 +47,14 @@ db.addBacklogItem = function(backlogId, backlogItem, callback){
 	db.updateBacklog(backlogId, {$push: {items:backlogItem}}, callback);
 };
 
+db.removeBacklogItems = function(backlogId, backlogItemIds, callback){	
+	backlogItemIds = backlogItemIds.map(function(b){
+		return db.toObjectID(b);
+	});
+	var query = {'$pull': { items : { '_id' : { $in : backlogItemIds } } } };
+	db.updateBacklog(backlogId, query, callback);
+};
+
 
 /*** Event store ***/
 
@@ -58,12 +66,27 @@ db.addEvent = function(aggregateId, eventData, callback){
 	var query = { aggregateId : aggregateId};
 	var params = {safe:true, serializeFunctions:true};	
 
-	setCreatedForEvent(eventData.event, eventData.created_by);	
+	setCreatedForEvent(eventData.event, eventData.createdBy);	
 
 	this.events.update(query, {'$push': { events : eventData.event}}, params, function(err, ev){
 		callback(err, eventData.event.data);
 	});
 }; 
+
+db.addEvents = function(aggregateId, events, createdBy, callback){
+	aggregateId = db.toObjectID(aggregateId);
+	var query = { aggregateId : aggregateId };
+	var params = { safe:true, serializeFunctions:true };
+
+	events = events.map(function(e){
+		setCreatedForEvent(e, createdBy);
+		return e;
+	});	
+
+	this.events.update(query, {'$pushAll': { events : events }}, params, function(err, itemsAffected){
+		callback(err, events);
+	});
+};
 
 db.createAggregateRoot = function(root, createdEvent, callback){
 	var params = {safe:true, serializeFunctions:true};

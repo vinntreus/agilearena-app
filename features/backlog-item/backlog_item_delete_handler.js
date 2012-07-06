@@ -1,20 +1,24 @@
 var db = require(NODE_APPDIR + '/db');
 
 var deleteBacklogItemHandler = (function () {
-	
-	//options => { backlog_id:string, backlog_items_ids:[], created_by:user }
 	//callback => (error)
 	var deleteItems = function(options, callback){
-		var delete_event;
-		
-		if(options.backlog_items_ids.length === 0) {
-			callback();
-		}
-		else
-		{		
-			delete_event = buildDeleteEvent({ id : options.backlog_items_ids.pop() });
-			storeEvent(delete_event, options, callback);
-		}
+		var backlogId = options.backlogId;
+		var backlogItemsIds = options.backlogItemsIds;
+		var user = options.user;						
+
+		db.getBacklog(backlogId, function(backlog){
+			var events = buildEvents(backlog, backlogItemsIds, user._id);
+			storeEvents(backlogId, events, user, callback);
+		});		
+	};
+
+	var buildEvents = function(backlog, itemIds, userId){
+		return itemIds.filter(function(id){			
+			return backlog.deleteItem(id, userId);
+		}).map(function(id){
+			return buildDeleteEvent({ id : id});
+		});;
 	};
 
 	var buildDeleteEvent = function(data){
@@ -30,31 +34,25 @@ var deleteBacklogItemHandler = (function () {
 		};
 	};
 
-	var storeEvent = function (delete_event, options, callback) {
-		var eventData = { event : delete_event, created_by : options.created_by };
-		var readModelData = { backlog_id : options.backlog_id, backlog_item_id : delete_event.data.id };
-
-		db.addEvent(options.backlog_id, eventData, function(error, ev){
+	var storeEvents = function (backlogId, events, user, callback) {
+		db.addEvents(backlogId, events, user, function(error, items){			
 			if(error != null) {
-				console.log("backlogItem_delete_handler::storeEvent::error", error);
-				callback("Could not delete item(s)");
-			}
-			else {
-				updateReadModel(readModelData, options, callback);
-			}
+				console.log("backlogItemDelete::storeEvent::error", error);
+				return callback("Could not delete item(s)");
+			}			
+			var itemIds = items.map(function(i){ return i.data.id});
+			updateReadModel(backlogId, itemIds, callback);
   	});
 	};
 
-	var updateReadModel = function(data, options, callback){
-		var query = {'$pull': { items : {'_id': db.toObjectID(data.backlog_item_id) } } };
-		db.updateBacklog(data.backlog_id, query, function(error){
+	var updateReadModel = function(backlogId, backlogItemIds, callback){		
+		db.removeBacklogItems(backlogId, backlogItemIds, function(error){
+			var errorMessage;
 			if(error != null) {
-				console.log("backlogItem_delete_handler::updateReadModel::error", error);
-				callback("Could not delete item(s)");
+				console.log("backlogItemDelete::updateReadModel::error", error);
+				errorMessage ="Could not delete item(s)";
 			}
-			else {
-				deleteItems(options, callback);
-			}
+			callback(errorMessage);
 		});
 	};	
 

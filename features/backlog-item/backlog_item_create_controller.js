@@ -5,15 +5,15 @@ var handler = require('./backlog_item_create_handler');
 exports.route = function(options){
   var app = options.app;
   var auth = options.auth;
-  app.post('/backlog-item/create', auth.ensureAuthenticated, create_backlogitem);   
+  app.post('/backlog-item/create', auth.ensureAuthenticated, createBacklogItem);
 };
 
 //ACTIONS
-var create_backlogitem = function(req, res){  
+var createBacklogItem = function(req, res){  
   var options = {
-    backlog_id : req.body.backlog_id,
-    backlog_item : req.body.backlog_item,
-    created_by : req.user
+    backlogId : req.body.backlog_id,
+    backlogItem : req.body.backlog_item,
+    createdBy : req.user
   };
 
   handler.createBacklogItem(options, function(error, itemId){

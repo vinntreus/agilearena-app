@@ -11,9 +11,9 @@ exports.route = function(options){
 //ACTIONS
 var delete_backlogitem = function(req, res){  
   var options = { 
-  	backlog_id : req.body.backlog_id,
-  	backlog_items_ids : req.body.items,
-  	created_by : req.user
+  	backlogId : req.body.backlog_id,
+  	backlogItemsIds : req.body.items,
+  	user : req.user
   };
 
   handler.deleteItems(options, function(error){  	
