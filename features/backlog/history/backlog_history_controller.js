@@ -1,4 +1,4 @@
-var db = require(NODE_APPDIR + '/db');
+var db = require(NODE_APPDIR + '/event_store');
 var Backlog = require(NODE_APPDIR + '/domain/backlog');
 
 //ROUTES

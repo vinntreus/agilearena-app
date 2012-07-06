@@ -1,13 +1,15 @@
-var db = require(NODE_APPDIR + '/db');
+var db = require(NODE_APPDIR + '/backlog_repository'),
+    es = require(NODE_APPDIR + '/event_store'),
+    Backlog = require(NODE_APPDIR + '/domain/backlog');
 
 var deleteBacklogItemHandler = (function () {
 	//callback => (error)
-	var deleteItems = function(options, callback){
+	var deleteItems = function(options, callback){		
 		var backlogId = options.backlogId;
 		var backlogItemsIds = options.backlogItemsIds;
 		var user = options.user;						
 
-		db.getBacklog(backlogId, function(backlog){
+		es.getAggregateRoot(backlogId, Backlog, null, function(backlog, ev){
 			var events = buildEvents(backlog, backlogItemsIds, user._id);
 			storeEvents(backlogId, events, user, callback);
 		});		
@@ -35,7 +37,7 @@ var deleteBacklogItemHandler = (function () {
 	};
 
 	var storeEvents = function (backlogId, events, user, callback) {
-		db.addEvents(backlogId, events, user, function(error, items){			
+		es.addEvents(backlogId, events, user, function(error, items){			
 			if(error != null) {
 				console.log("backlogItemDelete::storeEvent::error", error);
 				return callback("Could not delete item(s)");

@@ -1,5 +1,6 @@
 var BacklogModel = require(NODE_APPDIR + '/domain/backlog');
 var db = require(NODE_APPDIR + '/db');
+var es = require(NODE_APPDIR + '/event_store');
 
 
 var createBacklogHandler = function(command, options){
@@ -23,21 +24,16 @@ var createBacklog = function(command, options){
       return new obj(this.data);
     }
   };
-
-  db.createAggregateRoot(backlogAggregate, backlogCreatedEvent, function(aggregate){
-
-    var backlog = aggregate.events[0].run(BacklogModel);
-    
-    db.backlogs.insert(backlog, function(err, docs){          
-      if(err != null){
-        console.log("ERROR [create_backlog_handler::createBacklog] => Could not store backlog", eventErr);  
-        return options.failure("Could not save event");
+  es.createAggregateRoot(backlogAggregate, backlogCreatedEvent, command.owner, function(aggregate){
+    var backlog = aggregate.events[0].run(BacklogModel);    
+    db.backlogs.insert(backlog, function(err, docs){
+      if(err != null) {
+        console.log("ERROR [create_backlog_handler::createBacklog] => Could not store backlog", eventErr);
+        return options.failure("Could not save backlog");
       }
-
       options.success(backlog._id);
     });
-  });
-  
+  });  
 };
 
 module.exports.create = createBacklogHandler;

@@ -1,4 +1,7 @@
-var db = require(NODE_APPDIR + '/db');
+var db = require(NODE_APPDIR + '/db'),
+    backlogRepository = require(NODE_APPDIR + '/backlog_repository'),
+    es = require(NODE_APPDIR + '/event_store'),
+    Backlog = require(NODE_APPDIR + '/domain/backlog');
 
 var createBacklogItemHandler = (function() {
 
@@ -6,19 +9,18 @@ var createBacklogItemHandler = (function() {
   var createBacklogItem = function(options, callback) {    
     var backlogId = options.backlogId;
     var createdBy = options.createdBy;
-    var backlogItem = {
-      description : options.backlogItem.description,
-      createdById : createdBy._id
-    };    
+    var backlogItem = options.backlogItem;
+              
+    db.setId(backlogItem);
+    db.setCreated(backlogItem, createdBy);
 
-    db.getBacklog(backlogId, function(backlog){
+    es.getAggregateRoot(backlogId, Backlog, null, function(backlog, events){    
       backlog.addItem(backlogItem, function(error){
         if(error != null) {
           return callback(error);
         }        
-        var createBacklogItemEvent = buildEvent(backlogItem);
-        var eventData = { event : createBacklogItemEvent, createdBy : createdBy };
-        storeEvent(backlogId, eventData, callback);
+        var createBacklogItemEvent = buildEvent(backlogItem);        
+        storeEvent(backlogId, createBacklogItemEvent, createdBy, callback);
       });
     });
   };
@@ -33,18 +35,18 @@ var createBacklogItemHandler = (function() {
     };
   };
 
-  var storeEvent = function(backlogId, eventData, callback) {    
-    db.addEvent(backlogId, eventData, function(error, data) {
+  var storeEvent = function(backlogId, createEvent, createdBy, callback) {
+    es.addEvents(backlogId, [createEvent], createdBy, function(error, events) {
       if(error != null) {
         console.log("createBacklogItem::storeEvent::Error::", error);
         return callback("Could not store backlogitem");
       }      
-      updateReadModel(backlogId, data, callback);
+      updateReadModel(backlogId, events[0].data, callback);
     });
   };
 
   var updateReadModel = function(backlogId, backlogItemData, callback) {
-    db.addBacklogItem(backlogId, backlogItemData, function(error) {
+    backlogRepository.addBacklogItem(backlogId, backlogItemData, function(error) {
       var errorMessage;
       if(error != null) {
         console.log("createBacklogItem::updateReadModel::Error::", error);

@@ -19,7 +19,7 @@ Backlog.prototype.validateAddItem = function(item){
 	if(item == null || item.description == null || item.description.trim() == ""){
 		return "Cannot add empty item";
 	}
-	if(item.createdById !== this.owner){
+	if(item.createdById.toString() !== this.owner.toString()){
 		return "Not allowed to add item";
 	}
 	return null;
