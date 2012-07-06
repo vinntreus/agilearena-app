@@ -1,3 +1,4 @@
+
 var handler = require('./backlog_item_create_handler');
 
 //ROUTES
@@ -9,12 +10,13 @@ exports.route = function(options){
 
 //ACTIONS
 var create_backlogitem = function(req, res){  
-  var backlog_id = req.body.backlog_id;
-  var backlog_item = req.body.backlog_item;
-  backlog_item.createdBy = req.user.username;
-  backlog_item.createdById = req.user._id;
+  var options = {
+    backlog_id : req.body.backlog_id,
+    backlog_item : req.body.backlog_item,
+    created_by : req.user
+  };
 
-  handler.createBacklogItem(backlog_id, backlog_item, function(error, itemId){
+  handler.createBacklogItem(options, function(error, itemId){
     if(error != null){
       res.send("Could not save item", 500);
     }

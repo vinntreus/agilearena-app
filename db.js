@@ -14,6 +14,21 @@ var setObjectId = function(obj, prop){
 	obj[prop] = obj[prop] || new db.ObjectID();
 }
 
+var setCreatedBy = function(item, createdBy){
+	item.createdBy = createdBy.username;
+	item.createdById = db.toObjectID(createdBy._id);	
+}
+
+var setCreatedForEvent = function(event, createdBy){
+	var created = new Date();
+	setCreated(event, created);
+	setCreatedBy(event, createdBy);
+	if(event.data){
+		setCreated(event.data, created);
+		setCreatedBy(event.data, createdBy);
+	}
+};
+
 db.updateBacklog = function(itemId, updateOperation, callback){
 	itemId = db.toObjectID(itemId);
 	var item = {'_id': itemId};
@@ -28,14 +43,17 @@ db.addBacklogItem = function(backlogId, backlogItem, callback){
 
 /*** Event store ***/
 
-db.addEvent = function(aggregateId, eventToSave, callback){
+/*
+/* @eventData => { event:object, created_by:user }
+*/
+db.addEvent = function(aggregateId, eventData, callback){
 	aggregateId = db.toObjectID(aggregateId);
 	var query = { aggregateId : aggregateId};
 	var params = {safe:true, serializeFunctions:true};	
 
-	setCreated(eventToSave);	
+	setCreatedForEvent(eventData.event, eventData.created_by);	
 
-	this.events.update(query, {'$push': { events : eventToSave}}, params, callback);
+	this.events.update(query, {'$push': { events : eventData.event}}, params, callback);
 }; 
 
 db.createAggregateRoot = function(root, createdEvent, callback){

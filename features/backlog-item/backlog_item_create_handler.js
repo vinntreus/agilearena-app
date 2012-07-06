@@ -2,9 +2,9 @@ var db = require(NODE_APPDIR + '/db');
 
 var createBacklogItemHandler = (function() {
   //callback params = (error, backlog_item_id)
-  var createBacklogItem = function(backlog_id, backlog_item, callback) {
-    var create_backlogitem_event = buildEvent(backlog_item);
-    storeEvent(backlog_id, create_backlogitem_event, callback);
+  var createBacklogItem = function(options, callback) {
+    var create_backlogitem_event = buildEvent(options.backlog_item);
+    storeEvent(create_backlogitem_event, options, callback);
   };
 
   var buildEvent = function(backlog_item) {
@@ -17,15 +17,16 @@ var createBacklogItemHandler = (function() {
     };
   };
 
-  var storeEvent = function(backlog_id, create_backlogitem_event, callback) {
-    db.addEvent(backlog_id, create_backlogitem_event, function(error) {
+  var storeEvent = function(create_backlogitem_event, options, callback) {
+    var eventData = { event : create_backlogitem_event, created_by : options.created_by };
+    db.addEvent(options.backlog_id, eventData, function(error) {
       if(error != null) {
         console.log("addEvent::create_backlogitem_event::Error::", error);
         callback("Could not save item");
       }
       else {
         var backlog_item_data = create_backlogitem_event.data;
-        updateReadModel(backlog_id, backlog_item_data, callback);
+        updateReadModel(options.backlog_id, backlog_item_data, callback);
       }
     });
   };
