@@ -5,7 +5,7 @@ var compressor = require('node-minify');
 var app = module.exports = express.createServer();
 var passport = require('passport');
 var authentication = require('./authentication');
-
+var RedisStore = require('connect-redis')(express);
 
 // Configuration
 app.configure(function(){
@@ -15,7 +15,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.static(__dirname + '/public'));
-  app.use(express.session({ secret: 'monkey' }));
+  app.use(express.session({ secret: 'monkey', store : new RedisStore }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);  
