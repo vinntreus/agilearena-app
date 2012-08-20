@@ -2,11 +2,11 @@ NODE_APPDIR = __dirname;
 var express = require('express');
 var routes = require('./routing');
 var compressor = require('node-minify');
-var app = module.exports = express.createServer();
+var app = express();
 var passport = require('passport');
 var authentication = require('./authentication');
 var RedisStore = require('connect-redis')(express);
-
+console.log(__dirname + '/features');
 // Configuration
 app.configure(function(){
   app.set('views', __dirname + '/features');
@@ -18,7 +18,7 @@ app.configure(function(){
   app.use(express.session({ secret: 'monkey', store : new RedisStore }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(app.router);  
+  app.use(app.router);    
 });
 
 

@@ -1,34 +1,38 @@
-.page-header
-  h1= backlog.name
-    a.btn.pull-right(href="/backlogs/#{backlog._id}") Go back
+extends ../../layout
 
-.span4
-  h2 History
-  .well
-    ul.nav.nav-list
-      each e, i in events
-        if i == currentVersion
-          li(class='active')            
-            a(href='/backlogs/#{backlog._id}/#{i}') #{i + 1} #{e.type} (#{e.created})
-        else
-          li
-            a(href='/backlogs/#{backlog._id}/#{i}') #{i + 1} #{e.type} (#{e.created})
+block body 
 
-.span8
-  table.table.table-condensed.backlog-items
-    thead
-      tr
-        th(width='2%')
-        th(width='5%') #
-        th Description
-    tbody
-      each item, i in backlog.items
+  .page-header
+    h1= backlog.name
+      a.btn.pull-right(href="/backlogs/#{backlog._id}") Go back
+
+  .span4
+    h2 History
+    .well
+      ul.nav.nav-list
+        each e, i in events
+          if i == currentVersion
+            li(class='active')            
+              a(href='/backlogs/#{backlog._id}/#{i}') #{i + 1} #{e.type} (#{e.created})
+          else
+            li
+              a(href='/backlogs/#{backlog._id}/#{i}') #{i + 1} #{e.type} (#{e.created})
+
+  .span8
+    table.table.table-condensed.backlog-items
+      thead
         tr
-          td
-          td #{i + 1}
-          td #{item.description}
+          th(width='2%')
+          th(width='5%') #
+          th Description
+      tbody
+        each item, i in backlog.items
+          tr
+            td
+            td #{i + 1}
+            td #{item.description}
 
-.span4  
-  if events[currentVersion].createdBy
-    h2 Action taken by: 
-    span= events[currentVersion].createdBy
+  .span4  
+    if events[currentVersion].createdBy
+      h2 Action taken by: 
+      span= events[currentVersion].createdBy

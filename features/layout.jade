@@ -13,4 +13,5 @@ html(lang="en")
           include heading
           if (typeof user !== 'undefined')
             include heading-user-dropdown
-    .container-fluid!= body        
+    .container-fluid
+      block body        

@@ -1,35 +1,38 @@
-.page-header
-  h1= backlog.name
-    a.btn.pull-right(href="/backlogs/#{backlog._id}/admin")
-      i.icon-wrench
-      = ' Admin'
-    a.btn.pull-right(href="/backlogs/#{backlog._id}/0") History
-  
-.well
-  form.form-inline(method='post', action='/backlog-item/create', data-bind='submit: addItem', id='add_backlogitem')
-    input(type="hidden", id='backlog_id', name='backlog_id', value='#{backlog._id}')  
-    .controls
-      span= 'Add item '
-      input.input-xlarge(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"') 
-      = ' '
-      button.btn(type="submit") Save
-  div.toolbar
-    button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeSelection') Delete
-table.table.table-condensed.backlog-items
-  thead
-    tr
-      th(width='2%')
-      th(width='5%') #
-      th Description      
-  tbody(data-bind='foreach: items')
-    tr(data-bind="css: { selected : isSelected() }")
-      td
-        input(type='checkbox', data-bind="checked : isSelected")
-      td(data-bind="text: $index() + 1")
-      td(data-bind="text: description")
+extends ../../layout
 
-script(type='text/javascript', src='/backlog_show.js')
-script(type='text/javascript')
-  var backlogItems = !{JSON.stringify(backlog.items)};
-  var view = new BacklogView(backlogItems);
-  view.init();
+block body 
+  .page-header
+    h1= backlog.name
+      a.btn.pull-right(href="/backlogs/#{backlog._id}/admin")
+        i.icon-wrench
+        = ' Admin'
+      a.btn.pull-right(href="/backlogs/#{backlog._id}/0") History
+    
+  .well
+    form.form-inline(method='post', action='/backlog-item/create', data-bind='submit: addItem', id='add_backlogitem')
+      input(type="hidden", id='backlog_id', name='backlog_id', value='#{backlog._id}')  
+      .controls
+        span= 'Add item '
+        input.input-xlarge(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"') 
+        = ' '
+        button.btn(type="submit") Save
+    div.toolbar
+      button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeSelection') Delete
+  table.table.table-condensed.backlog-items
+    thead
+      tr
+        th(width='2%')
+        th(width='5%') #
+        th Description      
+    tbody(data-bind='foreach: items')
+      tr(data-bind="css: { selected : isSelected() }")
+        td
+          input(type='checkbox', data-bind="checked : isSelected")
+        td(data-bind="text: $index() + 1")
+        td(data-bind="text: description")
+
+  script(type='text/javascript', src='/backlog_show.js')
+  script(type='text/javascript')
+    var backlogItems = !{JSON.stringify(backlog.items)};
+    var view = new BacklogView(backlogItems);
+    view.init();
