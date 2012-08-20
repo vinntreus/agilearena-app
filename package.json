@@ -3,7 +3,7 @@
   "version": "0.0.1-2",
   "private": true,
   "dependencies": {
-    "express": ">= 2.5.8",
+    "express": ">= 3.0.0rc2",
     "jade": ">= 0.0.1",
     "mongoskin": ">= 0.3.6",
     "passport": ">= 0.1.8",
@@ -18,6 +18,6 @@
     "start": "app.js"
   },
   "engines": {
-    "node": "0.6.x"
+    "node": "0.8.x"
   }
 }
