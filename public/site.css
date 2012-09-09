@@ -6,7 +6,8 @@
   }
 }
 
-.btn{
+.btn
+{
   margin-right:4px;
 }
 
@@ -14,20 +15,32 @@
 {
   margin-left:10em;
 }
+
 table.backlog-items td
 {
   vertical-align: middle;
 }
 
-.nav > li > a:hover {
+.nav > li > a:hover 
+{
   text-decoration: none;
   background-color: #EEE;
 }
 
-.selected{
+.selected
+{
   background-color:#FFC;
 }
+
 .toolbar
 {
   min-height: 30px;
+  margin-bottom: 20px;
+  padding:0 20px;
+}
+
+/* overrides */
+.well .form-inline
+{
+  margin-bottom: 0;
 }

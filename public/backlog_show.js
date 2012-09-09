@@ -38,7 +38,7 @@ var Backlog = function(items){
   };
 
   //note use of ES5 [map, forEach]
-  this.removeSelection = function(){
+  this.removeItems = function(){
     var selection = this.selectedItems();
     var that = this;        
     var itemIds = selection.map(function(s){

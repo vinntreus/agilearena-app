@@ -16,8 +16,8 @@ block body
         input.input-xlarge(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"') 
         = ' '
         button.btn(type="submit") Save
-    div.toolbar
-      button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeSelection') Delete
+  div.toolbar
+    button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeItems') Delete
   table.table.table-condensed.backlog-items
     thead
       tr
