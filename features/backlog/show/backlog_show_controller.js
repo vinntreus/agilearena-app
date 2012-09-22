@@ -10,11 +10,12 @@ exports.route = function(options){
 
 //ACTIONS
 var show = function(req, res){
-  db.backlogs.findById(req.params.id, function(err, doc){
+  db.backlogs.findById(req.params.id, function(err, doc){     
     var model = {
       title : "Backlog - " + doc.name,
       backlog : doc,
       user : req.user,
+      labels : doc.labels || []
     };
     res.render('./backlog/show/backlog_show', model);    
   }); 

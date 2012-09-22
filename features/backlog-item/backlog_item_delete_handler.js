@@ -1,4 +1,4 @@
-var db = require(NODE_APPDIR + '/backlog_repository'),
+var db = require(NODE_APPDIR + '/backlog_readstore'),
     es = require(NODE_APPDIR + '/event_store'),
     Backlog = require(NODE_APPDIR + '/domain/backlog');
 

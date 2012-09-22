@@ -1,5 +1,5 @@
 var db = require(NODE_APPDIR + '/db'),
-    backlogRepository = require(NODE_APPDIR + '/backlog_repository'),
+    backlogReadstore = require(NODE_APPDIR + '/backlog_readstore'),
     es = require(NODE_APPDIR + '/event_store'),
     Backlog = require(NODE_APPDIR + '/domain/backlog');
 
@@ -46,7 +46,7 @@ var createBacklogItemHandler = (function() {
   };
 
   var updateReadModel = function(backlogId, backlogItemData, callback) {
-    backlogRepository.addBacklogItem(backlogId, backlogItemData, function(error) {
+    backlogReadstore.addBacklogItem(backlogId, backlogItemData, function(error) {
       var errorMessage;
       if(error != null) {
         console.log("createBacklogItem::updateReadModel::Error::", error);

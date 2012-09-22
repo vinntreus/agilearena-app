@@ -4,7 +4,42 @@ function Backlog (options){
   this.owner = options.owner;
   this.created = options.created;
   this.items = options.items || [];
+  this.labels = options.labels || [];
 };
+
+Backlog.prototype.addLabelToItem = function(id, label){
+	var item;
+	for(var i = 0, l = this.items.length; i < l; i++){
+		if(this.items[i]._id.toString() === id.toString()){
+			item = this.items[i];
+			break;
+		}
+	}
+	if(!item){
+		return "Item does not exist";
+	}
+	item.labels = item.labels || [];
+	for(var j = 0, k = item.labels.length; j < k; j++){
+		if(items.labels[i] === label)
+			return "Item already has that label";
+	}
+	item.labels.push(label);
+};
+
+Backlog.prototype.addLabel = function(label){
+	var validationResult = this.validateAddLabel(label);;
+	if(validationResult == null){
+		this.labels.push(label);				
+	}
+	return validationResult;
+};
+
+Backlog.prototype.validateAddLabel = function(label){
+	if(this.labels.indexOf(label) > -1)	{
+		return "Label already exist";
+	}
+	return null;
+}
 
 Backlog.prototype.addItem = function(item, callback){
 	var validationResult = this.validateAddItem(item);

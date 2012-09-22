@@ -61,6 +61,7 @@ var Backlog = function(items){
 var BacklogItem = function(options){
   this._id = options._id;
   this.description = options.description;
+  this.labels = options.labels;
   this.isSelected = ko.observable(false);    
 };
 
@@ -73,10 +74,12 @@ BacklogView.prototype = {
   init : function(){
     var that = this;
     $(function(){    
+      //adding backlogitems
       for(var i = 0, length = that.backlogItems.length; i < length; i++){
         that.items[i] = new BacklogItem(that.backlogItems[i]);
-      }  
+      }      
+
       ko.applyBindings(new Backlog(that.items));  
     }); 
   }
-}
+};

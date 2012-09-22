@@ -1,6 +1,16 @@
 var db = require(NODE_APPDIR + '/db');
 
-var backlogRepository = (function(){
+var backlogReadstore = (function(){
+
+	var addLabel = function(backlogId, label, callback){
+		_updateBacklog(backlogId, {$push: {labels:label}}, callback);
+	};
+
+	var addLabelToBacklogItem = function(backlogId, data, callback){
+		var query = { '_id' : db.toObjectID(backlogId), 'items._id' : db.toObjectID(data.id) };
+		var updateOperation = {$push: {'items.$.labels':data.label}};
+		db.backlogs.update(query, updateOperation, callback);
+	};
 
 	var addBacklogItem = function(backlogId, backlogItem, callback){			
 		_updateBacklog(backlogId, {$push: {items:backlogItem}}, callback);
@@ -11,7 +21,7 @@ var backlogRepository = (function(){
 			return db.toObjectID(b);
 		});
 		var query = {'$pull': { items : { '_id' : { $in : backlogItemIds } } } };
-		_updateBacklog(backlogId, query, callback);
+		_updateBacklog(backlogId, query, callback);		
 	};
 
 	var _updateBacklog = function(backlogId, updateOperation, callback){		
@@ -21,9 +31,11 @@ var backlogRepository = (function(){
 
 	return {
 		removeBacklogItems : removeBacklogItems,
-		addBacklogItem : addBacklogItem
+		addBacklogItem : addBacklogItem,
+		addLabel : addLabel,
+		addLabelToBacklogItem : addLabelToBacklogItem
 	};
 
 }());
 
-module.exports = backlogRepository;
+module.exports = backlogReadstore;

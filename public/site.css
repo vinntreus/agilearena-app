@@ -6,7 +6,8 @@
   }
 }
 
-.btn
+.btn,
+.item-description
 {
   margin-right:4px;
 }
@@ -34,7 +35,7 @@ table.backlog-items td
 
 .toolbar
 {
-  min-height: 30px;
+  min-height: 32px;
   margin-bottom: 20px;
   padding:0 20px;
 }
