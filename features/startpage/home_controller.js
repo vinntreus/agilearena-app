@@ -1,11 +1,5 @@
 var db = require(NODE_APPDIR + '/db');
 
-
-//ROUTES
-exports.route = function(options){
-  options.app.get('/', options.auth.ensureAuthenticated, index);
-};
-
 //ACTIONS
 var index = function(req, res){
   db.backlogs.find({owner : req.user._id}).toArray(function(err, docs){
@@ -18,4 +12,9 @@ var index = function(req, res){
     };
     res.render('./startpage/home', viewModel);  
   });  
+};
+
+//ROUTES
+exports.route = function(options){
+  options.app.get('/', options.auth.ensureAuthenticated, index);
 };

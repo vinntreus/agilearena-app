@@ -5,7 +5,7 @@ function Backlog (options){
   this.created = options.created;
   this.items = options.items || [];
   this.labels = options.labels || [];
-};
+}
 
 Backlog.prototype.addLabelToItem = function(id, label){
 	var item;
@@ -20,14 +20,15 @@ Backlog.prototype.addLabelToItem = function(id, label){
 	}
 	item.labels = item.labels || [];
 	for(var j = 0, k = item.labels.length; j < k; j++){
-		if(items.labels[i] === label)
+		if(item.labels[j] === label){
 			return "Item already has that label";
+		}
 	}
 	item.labels.push(label);
 };
 
 Backlog.prototype.addLabel = function(label){
-	var validationResult = this.validateAddLabel(label);;
+	var validationResult = this.validateAddLabel(label);
 	if(validationResult == null){
 		this.labels.push(label);				
 	}
@@ -39,25 +40,14 @@ Backlog.prototype.validateAddLabel = function(label){
 		return "Label already exist";
 	}
 	return null;
-}
-
-Backlog.prototype.addItem = function(item, callback){
-	var validationResult = this.validateAddItem(item);
-	
-	if(validationResult == null)
-		this.items.push(item);
-
-	callback(validationResult);
 };
 
-Backlog.prototype.validateAddItem = function(item){
-	if(item == null || item.description == null || item.description.trim() == ""){
+Backlog.prototype.addItem = function(item){
+	if(item == null || item.description == null || item.description.trim() === ""){
 		return "Cannot add empty item";
 	}
-	if(item.createdById.toString() !== this.owner.toString()){
-		return "Not allowed to add item";
-	}
-	return null;
+	
+	this.items.push(item);	
 };
 
 Backlog.prototype.deleteItem = function(id){

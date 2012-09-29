@@ -7,6 +7,7 @@ var passport = require('passport');
 var authentication = require('./authentication');
 var RedisStore = require('connect-redis')(express);
 console.log(__dirname + '/features');
+
 // Configuration
 app.configure(function(){
   app.set('views', __dirname + '/features');
@@ -15,7 +16,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.static(__dirname + '/public'));
-  app.use(express.session({ secret: 'monkey', store : new RedisStore }));
+  app.use(express.session({ secret: 'monkey', store : new RedisStore() }));
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);    

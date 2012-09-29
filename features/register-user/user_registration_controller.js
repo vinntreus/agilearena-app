@@ -1,16 +1,8 @@
 var registration = require("./user_registration");
-var passport;
-
-//ROUTING
-exports.route = function(options){
-  passport = options.passport;
-  options.app.get('/register', index);
-  options.app.post('/register', register);
-};
 
 //ACTIONS
 var index = function(req, res){
-  render_registration_view(res, {title : "Register"});
+  res.render("./register-user/user_registration", {title : "Register"});
 };
 
 var register = function(req, res, next){  
@@ -26,7 +18,8 @@ var register = function(req, res, next){
   });
 };
 
-//RENDER VIEW HELPER
-var render_registration_view = function(res, model){
-  res.render("./register-user/user_registration", model);
+//ROUTING
+exports.route = function(options){
+  options.app.get('/register', index);
+  options.app.post('/register', register);
 };

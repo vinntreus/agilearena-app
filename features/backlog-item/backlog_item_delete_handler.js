@@ -20,7 +20,7 @@ var deleteBacklogItemHandler = (function () {
 			return backlog.deleteItem(id, userId);
 		}).map(function(id){
 			return buildDeleteEvent({ id : id});
-		});;
+		});
 	};
 
 	var buildDeleteEvent = function(data){
@@ -42,9 +42,9 @@ var deleteBacklogItemHandler = (function () {
 				console.log("backlogItemDelete::storeEvent::error", error);
 				return callback("Could not delete item(s)");
 			}			
-			var itemIds = items.map(function(i){ return i.data.id});
+			var itemIds = items.map(function(i){ return i.data.id; });
 			updateReadModel(backlogId, itemIds, callback);
-  	});
+		});
 	};
 
 	var updateReadModel = function(backlogId, backlogItemIds, callback){		

@@ -1,13 +1,6 @@
 var db = require(NODE_APPDIR + '/event_store');
 var Backlog = require(NODE_APPDIR + '/domain/backlog');
 
-//ROUTES
-exports.route = function(options){
-  var app = options.app;
-  var auth = options.auth;  
-  app.get('/backlogs/:id/:version', auth.ensureAuthenticated, history);
-};
-
 //ACTIONS
 var history = function(req, res){
   var backlogId = req.params.id;
@@ -20,9 +13,15 @@ var history = function(req, res){
       backlog : backlog,        
       events : events,
       currentVersion : version,
-      user : user,
+      user : user
     };
-    res.render('./backlog/history/backlog_history', model);
+    res.render('./backlog/backlog_history', model);
   });
+};
 
+//ROUTES
+exports.route = function(options){
+  var app = options.app;
+  var auth = options.auth;  
+  app.get('/backlogs/:id/:version', auth.ensureAuthenticated, history);
 };

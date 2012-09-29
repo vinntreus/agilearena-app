@@ -1,13 +1,6 @@
 
 var handler = require('./backlog_item_addlabel_handler');
 
-//ROUTES
-exports.route = function(options){
-  var app = options.app;
-  var auth = options.auth;
-  app.post('/backlog-item/label', auth.ensureAuthenticated, addLabel);
-};
-
 //ACTIONS
 var addLabel = function(req, res){  
   var ids = req.body.backlog_item_ids;
@@ -29,6 +22,11 @@ var addLabel = function(req, res){
       res.send({"_id" : itemId}, 200);
     }
   });  
+};
 
-  
+//ROUTES
+exports.route = function(options){
+  var app = options.app;
+  var auth = options.auth;
+  app.post('/backlog-item/label', auth.ensureAuthenticated, addLabel);
 };

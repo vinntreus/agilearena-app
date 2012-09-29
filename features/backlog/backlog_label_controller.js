@@ -1,12 +1,4 @@
-var handler = require('./backlog_addlabel_handler');
-
-//ROUTES
-exports.route = function(options){
-  var app = options.app;
-  var auth = options.auth;
-
-  app.post('/backlog/label', auth.ensureAuthenticated, addLabel); 
-};
+var handler = require('./backlog_label_handler');
 
 var addLabel = function(req, res){ 
 
@@ -22,4 +14,12 @@ var addLabel = function(req, res){
       res.send({}, 200);
     }
   });  
+};
+
+//ROUTES
+exports.route = function(options){
+  var app = options.app;
+  var auth = options.auth;
+
+  app.post('/backlog/label', auth.ensureAuthenticated, addLabel); 
 };
