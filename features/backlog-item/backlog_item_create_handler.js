@@ -15,13 +15,12 @@ var createBacklogItemHandler = (function() {
     db.setCreated(backlogItem, createdBy);
 
     es.getAggregateRoot(backlogId, Backlog, null, function(backlog, events){    
-      backlog.addItem(backlogItem, function(error){
-        if(error != null) {
-          return callback(error);
-        }        
-        var createBacklogItemEvent = buildEvent(backlogItem);        
-        storeEvent(backlogId, createBacklogItemEvent, createdBy, callback);
-      });
+      var error = backlog.addItem(backlogItem);
+      if(error != null) {
+        return callback(error);
+      }        
+      var createBacklogItemEvent = buildEvent(backlogItem);        
+      storeEvent(backlogId, createBacklogItemEvent, createdBy, callback);      
     });
   };
 
