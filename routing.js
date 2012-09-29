@@ -1,5 +1,5 @@
 var auth = require('./authentication');
-var features = require('./dir_loader').load('./features/');
+var features = require('./dir_loader').load('./ui/');
 var redColor = '\033[31m';
 var headingColor = '\033[32m';
 var resetColor = '\033[0m';

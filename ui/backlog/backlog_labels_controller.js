@@ -1,4 +1,4 @@
-var handler = require('./backlog_label_handler');
+var handler = require(NODE_APPDIR + '/commands/backlog_labels');
 
 var addLabel = function(req, res){ 
 

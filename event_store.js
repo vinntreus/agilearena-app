@@ -68,8 +68,8 @@ var eventStore = (function(){
 	  CreatedBacklog : "Created backlog", 
 	  CreatedBacklogItemEvent : "Added item",
 	  DeletedBacklogItemEvent : "Removed item",
-	  AddBacklogLabelEvent : "New label to backlog",
-	  AddBacklogItemLabelEvent : "New label to backlog item"
+	  AddedBacklogLabelEvent : "New label to backlog",
+	  AddedBacklogItemLabelEvent : "New label to backlog item"
 	};
 
 	return {

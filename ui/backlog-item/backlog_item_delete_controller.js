@@ -1,5 +1,5 @@
 var db = require(NODE_APPDIR + '/db');
-var handler = require('./backlog_item_delete_handler');
+var handler = require(NODE_APPDIR + '/commands/backlogitem_delete');
 
 //ACTIONS
 var delete_backlogitem = function(req, res){  

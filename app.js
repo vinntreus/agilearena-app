@@ -6,11 +6,10 @@ var app = express();
 var passport = require('passport');
 var authentication = require('./authentication');
 var RedisStore = require('connect-redis')(express);
-console.log(__dirname + '/features');
 
 // Configuration
 app.configure(function(){
-  app.set('views', __dirname + '/features');
+  app.set('views', __dirname + '/ui');
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.methodOverride());

@@ -2,9 +2,9 @@ var backlogReadstore = require(NODE_APPDIR + '/backlog_readstore'),
     Backlog = require(NODE_APPDIR + '/domain/backlog'),
     eh = require(NODE_APPDIR + '/event_handler');
 
-var addLabelEvent = function(label){
+var addedLabelEvent = function(label){
   return {
-    type : "AddBacklogLabelEvent",
+    type : "AddedBacklogLabelEvent",
     data : label,
     run : function(backlog){
       backlog.labels.push(this.data);
@@ -13,7 +13,7 @@ var addLabelEvent = function(label){
 };
 
 var addLabel = function(options, callback){
-  var e = addLabelEvent(options.label);
+  var e = addedLabelEvent(options.label);
   var o = {
     arId : options.backlogId,
     arType : Backlog,
@@ -22,8 +22,7 @@ var addLabel = function(options, callback){
     runCommand : function(root) {
       return root.addLabel(e.data);
     },
-    onUpdateReadModel : backlogReadstore.addLabel,
-    loggingEnabled : true
+    onUpdateReadModel : backlogReadstore.addLabel
   };
   eh.process(o, callback);
 };

@@ -1,4 +1,4 @@
-var registration = require("./user_registration");
+var registration = require(NODE_APPDIR + "/commands/user_registration");
 
 //ACTIONS
 var index = function(req, res){

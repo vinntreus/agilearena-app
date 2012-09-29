@@ -1,11 +1,8 @@
-
-var handler = require('./backlog_item_addlabel_handler');
+var handler = require(NODE_APPDIR + '/commands/backlogitem_labels');
 
 //ACTIONS
 var addLabel = function(req, res){  
   var ids = req.body.backlog_item_ids;
-  
-  console.log("ids", ids);
 
   var options = {
     backlogId : req.body.backlog_id,

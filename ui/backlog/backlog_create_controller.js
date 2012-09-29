@@ -1,4 +1,4 @@
-var backlogCreator = require('./backlog_create');
+var backlogCreator = require(NODE_APPDIR + '/commands/backlog_create');
 
 //ACTIONS
 var create_get = function(req, res){
@@ -9,7 +9,6 @@ var create_get = function(req, res){
 };
 
 var create_post = function(req, res){ 
-
   var backlogData = {    
     name : req.body.backlog.name,
     owner : req.user

@@ -1,5 +1,4 @@
-
-var handler = require('./backlog_item_create_handler');
+var handler = require(NODE_APPDIR + '/commands/backlogitem_create');
 
 //ACTIONS
 var createBacklogItem = function(req, res){  
