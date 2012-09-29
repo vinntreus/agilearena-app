@@ -46,7 +46,7 @@ block body
         td(data-bind="text: $index() + 1")
         td
           span(data-bind="text: description", class="item-description")
-          span(data-bind="text: labels", class="label label-info")
+          span(data-bind="visible : labels != null, text: labels", class="label label-info")
 
   script(type='text/javascript', src='/backlog_show.js')
   script(type='text/javascript', src='/backlog_labels.js')

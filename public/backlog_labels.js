@@ -70,8 +70,6 @@ var labels = (function(){
         }).error(function(e){
           alert(e.responseText);
         });
-        console.log("adding to " + url);
-        console.log("data", data);
       });
     }
   };
