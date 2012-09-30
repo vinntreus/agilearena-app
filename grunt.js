@@ -61,4 +61,19 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', 'lint test concat min');
 
+  grunt.registerTask('replay', 'Clears readstore and replay events', function(){
+    grunt.log.writeln('Starting to clear readstore...');
+    var done = this.async();
+
+    var replay = require('./event_replay');
+    replay.run(grunt, done);
+  });
+
+  grunt.registerTask('clear', 'Clears readstore and events', function(){
+    var done = this.async();
+
+    var replay = require('./event_replay');
+    replay.clear(grunt, done);
+  });
+
 };
