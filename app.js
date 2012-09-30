@@ -34,29 +34,6 @@ authentication.setup(passport);
 
 // Routes
 routes.map(app, passport);
-// Using Google Closure
-/*new compressor.minify({
-    type: 'gcc',
-    fileIn: ['./public/libs/jquery-1.7.2.js', 
-             './public/libs/bootstrap/js/bootstrap.js',
-             './public/libs/knockout-2.1.0.debug.js'
-            ],
-    fileOut: './public/javascripts/scripts.js',
-    callback: function(err){
-        console.log("minify js errors",err);
-    }
-});
-// Using YUI Compressor
-new compressor.minify({
-    type: 'yui',
-    fileIn: ['./public/libs/bootstrap-spacelab/bootstrap.css', 
-             './public/libs/bootstrap/css/bootstrap-responsive.css'
-             ],
-    fileOut: './public/stylesheets/styles.css',
-    callback: function(err){
-        console.log("minify css errors", err);
-    }
-});*/
 
 var port = process.env.PORT || 3000;
 app.listen(port, function(){
