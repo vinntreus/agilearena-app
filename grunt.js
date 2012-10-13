@@ -1,5 +1,6 @@
 /*global module:false*/
 module.exports = function(grunt) {
+  
 
   // Project configuration.
   grunt.initConfig({
@@ -12,10 +13,13 @@ module.exports = function(grunt) {
         ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
     },
     lint: {
-      files: ['grunt.js', 'domain/**/*.js', 'test/**/*.js', 'ui/**/*.js']
+      files: ['grunt.js', 'domain/**/*.js', 'ui/**/*.js']
     },
-    test: {
-      files: ['test/**/*.js']
+    simplemocha: {
+      all: {
+        src: 'test/**/*.js'
+        
+      }
     },
     concat: {
       dist: {
@@ -30,8 +34,8 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint test'
+      files: ['<config:lint.files>','test/**/*.js' ],
+      tasks: 'lint simplemocha'
     },
     jshint: {
       options: {
@@ -58,8 +62,10 @@ module.exports = function(grunt) {
     uglify: {}
   });
 
+  grunt.loadNpmTasks('grunt-simple-mocha');
+
   // Default task.
-  grunt.registerTask('default', 'lint test concat min');
+  grunt.registerTask('default', 'lint simplemocha');
 
   grunt.registerTask('replay', 'Clears readstore and replay events', function(){
     grunt.log.writeln('Starting to clear readstore...');
