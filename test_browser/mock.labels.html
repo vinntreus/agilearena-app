@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
   <style>
     .match { font-weight: bold}
+    .selected { color : green;}
   </style>
   <script src="../public/libs/jquery-1.8.2.js"></script>
   <script src="../public/libs/underscore.js"></script>  
@@ -16,10 +17,12 @@
   <script src="../public/labels.js"></script>
   <script type="text/template" id="label_template">      
       <% _.each(matches, function(l){ %>
-          <li><%= l.replace(query, "<span class='match'>" + query + "</span>") %></li>
+          <li class='label'>
+            <%= l.replace(query, "<span class='match'>" + query + "</span>") %>
+          </li>
       <% }); %>
       <% if(!exactMatch && query){ %>
-          <li>Create <span class='match'><%= query %></span></li>
+          <li class='create-label'>Create <span class='match'><%= query %></span></li>
       <% } %>
   </script>  
   <script type="text/javascript">
@@ -28,7 +31,7 @@
     
     var template = aa.labelTemplate;
     template.setTemplate("#label_template");
-    template.setTemplateElement("#result");
+    template.setTemplateElement("#result");    
 
     var labelSelector = aa.labelSearch;
     labelSelector.init({      

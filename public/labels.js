@@ -61,6 +61,9 @@ aa.labelTemplate = (function(){
     },
     run : function(data){
       return _template(data);
+    },
+    element : function(){
+      return _templateElement;
     }
   };
 }());
@@ -77,6 +80,18 @@ aa.labelSearch = (function(){
   var setupEvents = function(){
     _searchField.keyup(function(e){ 
       search(_searchField.val());        
+    });
+
+    _template.element().on("click", function(e){
+      var target = $(e.target);      
+      if(target.is(".label")){
+        console.log("is t", target)
+        target.toggleClass("selected");
+      }
+      else if(target.parent().is(".label"))
+      {
+        target.parent().toggleClass("selected");
+      }
     });
   };
 
