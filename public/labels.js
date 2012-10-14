@@ -40,22 +40,55 @@ aa.labels = (function(){
         exactMatch : exactMatch,
         query : query
       }
-    },
-    init : function(options){
-      var that = this;
-      var searchField = $(options.searchField);
-      var template = _.template($(options.template).html()); //precompile
-      var resultElement = $(options.resultElement);  
-      
-      var doSearch = function(query){
-        var result = that.search(query);
-        resultElement.html( template(result) );
-      };
-      searchField.keyup(function(e){        
-        doSearch(searchField.val());
-      });
+    }    
+  };
+}());
 
-      doSearch("");
+aa.labelTemplate = (function(){
+  var _template,
+      _templateElement;
+
+  return {
+    setTemplate : function(template){
+      _template = _.template($(template).html()); //precompile
+    },
+    setTemplateElement : function(selector){
+      _templateElement = $(selector);
+    },
+    render : function(data){
+      var result = this.run(data);
+      _templateElement.html(result);
+    },
+    run : function(data){
+      return _template(data);
     }
   };
+}());
+
+aa.labelSelector = (function(){
+  var _labels,
+      _searchField,
+      _template;
+
+  var search = function(query){    
+    var result = _labels.search(query);    
+    _template.render(result);
+  };
+  var setupEvents = function(){
+    _searchField.keyup(function(e){ 
+      search(_searchField.val());        
+    });
+  };
+
+  return {
+    init : function(options){
+      var that = this;
+      _labels = options.labels;
+      _searchField = $(options.searchField);
+      _template = options.template;
+      
+      setupEvents();  
+    },
+    search : search
+  }
 }());

@@ -23,13 +23,20 @@
       <% } %>
   </script>  
   <script type="text/javascript">
-    var l = aa.labels;
-    l.load(['a', 'b', 'ab', 'abc', 'cia']);
-    l.init({      
+    var labels = aa.labels;
+    labels.load(['a', 'b', 'ab', 'abc', 'cia']);
+    
+    var template = aa.labelTemplate;
+    template.setTemplate("#label_template");
+    template.setTemplateElement("#result");
+
+    var labelSelector = aa.labelSelector;
+    labelSelector.init({      
       searchField : "#add_label",
-      template : "#label_template",
-      resultElement : "#result"
-    });      
+      template : template,      
+      labels : labels
+    });
+    labelSelector.search();
   </script>
   
 </body>

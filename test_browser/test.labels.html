@@ -6,12 +6,26 @@
 </head>
 <body>
   <div id="mocha"></div>
-  <script src="../public/libs/jquery-1.7.2.js"></script>  
+  <input type="text" id="add_label" name="label" style="visibility:hidden" />
+  <ul id="result" style="visibility:hidden"></ul> 
+  
+  <script type="text/template" id="label_template">      
+      <% _.each(matches, function(l){ %>
+          <li><%= l.replace(query, "<span class='match'>" + query + "</span>") %></li>
+      <% }); %>
+      <% if(!exactMatch && query){ %>
+          <li>Create <span class='match'><%= query %></span></li>
+      <% } %>
+  </script>  
+
+  <script src="../public/libs/jquery-1.8.2.js"></script>  
+  <script src="../public/libs/underscore.js"></script>  
   <script src="../node_modules/mocha/mocha.js"></script>
   <script src="../node_modules/chai/chai.js"></script>
   <script>mocha.setup('bdd')</script>
   <script src="../public/labels.js"></script>
   <script src="test.labels.js"></script>
+  <script src="test.labelsSelector.js"></script>
   <script>
     mocha.run();
   </script>
