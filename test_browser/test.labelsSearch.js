@@ -7,10 +7,10 @@ expect = chai.expect;
   script#label_template
 */
 
-describe("label selector", function(){
+describe("label search", function(){
   var labels = {};
   var template = {};
-  var selector = aa.labelSelector;
+  var selector = aa.labelSearch;
   var selectorOptions = {      
     searchField : "#add_label",
     template : template,

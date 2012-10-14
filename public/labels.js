@@ -65,7 +65,7 @@ aa.labelTemplate = (function(){
   };
 }());
 
-aa.labelSelector = (function(){
+aa.labelSearch = (function(){
   var _labels,
       _searchField,
       _template;
