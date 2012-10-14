@@ -107,8 +107,7 @@ describe("label search", function(){
     it("selecting child element of item with class='label' should add css class", function(){
       template.render = function(data){
         var li = "<li id='label2' class='label'><span>a</span></li>";
-        $("#result").append(li);
-        console.log("res", $("#result"))
+        $("#result").append(li);        
       };
       
       selector.search("a");

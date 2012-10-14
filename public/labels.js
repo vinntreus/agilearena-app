@@ -84,8 +84,7 @@ aa.labelSearch = (function(){
 
     _template.element().on("click", function(e){
       var target = $(e.target);      
-      if(target.is(".label")){
-        console.log("is t", target)
+      if(target.is(".label")){        
         target.toggleClass("selected");
       }
       else if(target.parent().is(".label"))
