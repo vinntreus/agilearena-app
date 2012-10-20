@@ -36,8 +36,8 @@
     template.setTemplate("#label_template");
     template.setTemplateElement("#result");    
 
-    var labelSelector = aa.labelSearch;
-    labelSelector.init({      
+    var labelSearcher = aa.labelSearch;
+    labelSearcher.init({      
       searchField : "#add_label",
       template : template,      
       labels : labels,
@@ -49,8 +49,8 @@
         console.log("create:", e);
       }
     });
-   
-    labelSelector.search();
+
+    labelSearcher.search();
   </script>
   
 </body>
