@@ -15,7 +15,7 @@
   <ul id="result"></ul> 
 
   <script src="../public/labels.js"></script>
-  <script type="text/template" id="label_template">     
+  <script type="text/template" id="label_template">   
       <% _.each(matches, function(l){ %>
           <li class='label <%= selectedLabels[l] ? 'selected' : '' %>' data-label='<%= l %>'>
             <%= l.replace(query, "<span class='match'>" + query + "</span>") %>
@@ -24,7 +24,7 @@
       <% if(!exactMatch && query){ %>
           <li class='create-label'>Create <span class='match'><%= query %></span></li>
       <% } %>
-      <% if(stateChanged){ %>
+      <% if(selectionChanged){ %>
           <li class='apply-label'>Apply</li>
       <% } %>
   </script>  
@@ -34,14 +34,17 @@
     
     var template = aa.labelTemplate;
     template.setTemplate("#label_template");
-    template.setTemplateElement("#result");    
+    template.setTemplateElement("#result");   
+
+    var selection = aa.labelSelection;
+    selection.init({a : {}}); 
 
     var labelSearcher = aa.labelSearch;
     labelSearcher.init({      
       searchField : "#add_label",
       template : template,      
       labels : labels,
-      selectedLabels : {a : {}},
+      selection : selection,
       onApply : function(e){
         console.log("apply:", e);
       },

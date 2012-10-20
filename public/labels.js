@@ -31,7 +31,8 @@ aa.labels = (function(){
       }
       return searchResult;
     },
-    search : function(query){      
+    search : function(query){    
+      query = query || "";  
       var matches = this.find(query);
       var exactMatch = _hasExactMatch(matches, query);      
 
@@ -68,42 +69,68 @@ aa.labelTemplate = (function(){
   };
 }());
 
+aa.labelSelection = (function(){
+  var _initialSelection,
+  _currentSelection,
+  _selectionChanged = false;
+
+  return {
+    init : function(initialSelection){
+      _initialSelection = initialSelection || {};
+      _currentSelection = {};
+
+      for(var i in _initialSelection){
+        if(_initialSelection.hasOwnProperty(i)){
+          _currentSelection[i] = _initialSelection[i];
+        }
+      }
+    },
+    select : function(label){
+      if(_currentSelection[label]){
+        delete _currentSelection[label];
+      }
+      else{
+        _currentSelection[label] = {};
+      }
+      
+      _selectionChanged = !_currentSelection.equals(_initialSelection);
+    },
+    get : function(data){
+      return {
+        selectionChanged : _selectionChanged,
+        selectedLabels : _currentSelection
+      };      
+    }
+  };
+}());
+
 aa.labelSearch = (function(){
   var _labels,
       _searchField,
-      _template,
-      _selectedLabels,
+      _template,      
       _searchResult,
       _onApply,
-      _onCreate;
+      _onCreate,
+      _selection;
 
   var search = function(query){    
-    _searchResult = _labels.search(query);  
-
-    if(!_searchResult.selectedLabels){
-      _searchResult.selectedLabels = {};
-      for(var i in _selectedLabels)
-        _searchResult.selectedLabels[i] = _selectedLabels[i];      
-    }
-    if(typeof _searchResult.stateChanged === 'undefined')
-      _searchResult.stateChanged = false;
-
+    _searchResult = _labels.search(query);       
     render();
   };
   var render = function(){
-    _template.render(_searchResult);
+    var o = $.extend({}, _searchResult, _selection.get());    
+    _template.render(o);
   };
   var setupEvents = function(){
     _searchField.off("keyup");
     _template.element().off("click");
 
-    _searchField.keyup(function(e){ 
-      
+    _searchField.keyup(function(e){       
       if(e.keyCode === 13){ //press enter        
         $(".create-label").trigger("click");
       }
       else{
-        search(_searchField.val());
+        search(_searchField.val());        
       }
     });
 
@@ -115,41 +142,29 @@ aa.labelSearch = (function(){
       }
 
       if(target.is(".label")){
-        selectLabel(target.data("label"));
+        _selection.select(target.data("label"));
         render();
       }     
       else if(target.is(".apply-label")){
-        _onApply(_searchResult.selectedLabels);
+        _onApply(_selection.get());
       }
       else if(target.is(".create-label")){
         _onCreate(_searchResult.query);
       }
     });
-  };
-  
-  var selectLabel = function(l){
-    var index = _searchResult.matches.indexOf(l);
-    var match = _searchResult.matches[index];
-
-    if(_searchResult.selectedLabels[match]){
-      delete _searchResult.selectedLabels[match];
-    }
-    else{
-      _searchResult.selectedLabels[match] = {};
-    }
-    
-    _searchResult.stateChanged = !_searchResult.selectedLabels.equals(_selectedLabels);
-  };
+  }; 
 
   return {
     init : function(options){
       var that = this;
+
       _labels = options.labels;
       _searchField = $(options.searchField);
       _template = options.template;
-      _selectedLabels = options.selectedLabels || {};
+      _selection = options.selection; 
+      
       _onApply = options.onApply || function(e){};
-      _onCreate = options.onCreate || function(e){};
+      _onCreate = options.onCreate || function(e){};      
       
       setupEvents();  
     },

@@ -15,7 +15,8 @@ describe("label search", function(){
   var selectorOptions = {      
     searchField : "#add_label",
     template : template,
-    labels : labels
+    labels : labels,
+    selection : { get : function(){ return {};}}
   };  
   var searchField = $(selectorOptions.searchField);
 
@@ -54,17 +55,18 @@ describe("label search", function(){
       selector.search("a");
     });
 
-    it("with preselected items, should select when searching", function(done){
+    it("should add selection to rendering when searching", function(done){
       labels.search = function(q){
         return { matches : ["a"] };
       }
+      selectorOptions.selection.get = function(){
+        return { a : {}}
+      }
       template.render = function(data){
-        expect(data.selectedLabels["a"]).to.be.an('object');
-        selectorOptions.selectedLabels = {}; //clean up
+        expect(data.a).to.be.an('object');
+        selectorOptions.selection.get = function(){ return {};}; //clean up
         done();
       };
-
-      selectorOptions.selectedLabels = { a : {}};
 
       selector.init(selectorOptions);
 
