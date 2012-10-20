@@ -109,19 +109,19 @@ aa.labelSearch = (function(){
 
     _template.element().on("click", function(e){
       var target = $(e.target);      
+      
+      if(!target.is("li")){
+        target = target.parent("li");
+      }
+
       if(target.is(".label")){
         selectLabel(target.data("label"));
         render();
-      }
-      else if(target.parent().is(".label"))
-      {
-        selectLabel(target.parent().data("label"));
-        render();
-      }
+      }     
       else if(target.is(".apply-label")){
         _onApply(_searchResult.selectedLabels);
       }
-      else if(target.is(".create-label") || target.parent().is(".create-label")){
+      else if(target.is(".create-label")){
         _onCreate(_searchResult.query);
       }
     });
