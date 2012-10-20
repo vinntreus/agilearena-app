@@ -71,11 +71,25 @@ aa.labelTemplate = (function(){
 aa.labelSearch = (function(){
   var _labels,
       _searchField,
-      _template;
+      _template,
+      _selectedLabels,
+      _searchResult;
 
   var search = function(query){    
-    var result = _labels.search(query);    
-    _template.render(result);
+    _searchResult = _labels.search(query);  
+
+    if(!_searchResult.selectedLabels){
+      _searchResult.selectedLabels = {};
+      for(var i in _selectedLabels)
+        _searchResult.selectedLabels[i] = _selectedLabels[i];      
+    }
+    if(typeof _searchResult.stateChanged === 'undefined')
+      _searchResult.stateChanged = false;
+
+    render();
+  };
+  var render = function(){
+    _template.render(_searchResult);
   };
   var setupEvents = function(){
     _searchField.keyup(function(e){ 
@@ -84,14 +98,30 @@ aa.labelSearch = (function(){
 
     _template.element().on("click", function(e){
       var target = $(e.target);      
-      if(target.is(".label")){        
-        target.toggleClass("selected");
+      if(target.is(".label")){
+        updateState(target.data("label"));
       }
       else if(target.parent().is(".label"))
       {
-        target.parent().toggleClass("selected");
+        updateState(target.parent().data("label"));
       }
     });
+  };
+  
+  var updateState = function(l){
+    var index = _searchResult.matches.indexOf(l);
+    var match = _searchResult.matches[index];
+
+    if(_searchResult.selectedLabels[match]){
+      delete _searchResult.selectedLabels[match];
+    }
+    else{
+      _searchResult.selectedLabels[match] = {};
+    }
+    
+    _searchResult.stateChanged = !_searchResult.selectedLabels.equals(_selectedLabels);    
+
+    render();
   };
 
   return {
@@ -100,9 +130,44 @@ aa.labelSearch = (function(){
       _labels = options.labels;
       _searchField = $(options.searchField);
       _template = options.template;
+      _selectedLabels = options.selectedLabels || {};
       
       setupEvents();  
     },
     search : search
   }
 }());
+
+
+Object.prototype.equals = function(x)
+{
+  var p;
+  for(p in this) {
+      if(typeof(x[p])=='undefined') {return false;}
+  }
+
+  for(p in this) {
+      if (this[p]) {
+          switch(typeof(this[p])) {
+              case 'object':
+                  if (!this[p].equals(x[p])) { return false; } break;
+              case 'function':
+                  if (typeof(x[p])=='undefined' ||
+                      (p != 'equals' && this[p].toString() != x[p].toString()))
+                      return false;
+                  break;
+              default:
+                  if (this[p] != x[p]) { return false; }
+          }
+      } else {
+          if (x[p])
+              return false;
+      }
+  }
+
+  for(p in x) {
+      if(typeof(this[p])=='undefined') {return false;}
+  }
+
+  return true;
+}
