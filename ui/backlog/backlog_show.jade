@@ -16,22 +16,7 @@ block body
         input.input-xlarge(type="text", name='backlog_item[description]', data-bind='value: itemToAdd, valueUpdate: "afterkeydown"') 
         = ' '
         button.btn(type="submit") Save
-  div.toolbar.btn-toolbar
-    div.btn-group
-      button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeItems') Delete
-    div.btn-group(data-bind='visible: selectedItems().length > 0')
-      button.btn.dropdown-toggle(data-toggle='dropdown') Label 
-        span.caret
-      ul.dropdown-menu(id='labels', data-addbacklogitemlabelurl='/backlog-item/label')
-        li
-          form.form-inline(method='post', action='/backlog/label', id='add_label')
-            input(type="hidden", id='add_label_backlog_id', name='backlog_id', value='#{backlog._id}')  
-            input(type="text", id='add_label', name='label')
-        li.suggestion
-          a(href='#', id='label-suggestion')
-        each label in labels
-          li.l
-            a(href='#') #{label}
+  include toolbar 
 
   table.table.table-condensed.backlog-items
     thead
@@ -48,7 +33,7 @@ block body
           span(data-bind="text: description", class="item-description")
           span(data-bind="visible : labels != null, text: labels", class="label label-info")
 
-  script(type='text/javascript', src='/backlog_show.js')
+  script(type='text/javascript', src='/backlog_show.js')  
   script(type='text/javascript', src='/backlog_labels.js')
   script(type='text/javascript')
     var backlogItems = !{JSON.stringify(backlog.items)};
