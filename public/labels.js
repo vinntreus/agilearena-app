@@ -73,7 +73,9 @@ aa.labelSearch = (function(){
       _searchField,
       _template,
       _selectedLabels,
-      _searchResult;
+      _searchResult,
+      _onApply,
+      _onCreate;
 
   var search = function(query){    
     _searchResult = _labels.search(query);  
@@ -92,6 +94,9 @@ aa.labelSearch = (function(){
     _template.render(_searchResult);
   };
   var setupEvents = function(){
+    _searchField.off("keyup");
+    _template.element().off("click");
+
     _searchField.keyup(function(e){ 
       
       if(e.keyCode === 13){ //press enter        
@@ -106,10 +111,12 @@ aa.labelSearch = (function(){
       var target = $(e.target);      
       if(target.is(".label")){
         selectLabel(target.data("label"));
+        render();
       }
       else if(target.parent().is(".label"))
       {
         selectLabel(target.parent().data("label"));
+        render();
       }
       else if(target.is(".apply-label")){
         _onApply(_searchResult.selectedLabels);
@@ -131,9 +138,7 @@ aa.labelSearch = (function(){
       _searchResult.selectedLabels[match] = {};
     }
     
-    _searchResult.stateChanged = !_searchResult.selectedLabels.equals(_selectedLabels);    
-
-    render();
+    _searchResult.stateChanged = !_searchResult.selectedLabels.equals(_selectedLabels);
   };
 
   return {
