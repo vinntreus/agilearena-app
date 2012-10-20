@@ -74,5 +74,68 @@ describe("label search", function(){
     });
   });
 
+  describe("selection", function(){
+    var s = aa.labelSelection;
+
+    describe("init", function(){
+      it("undefined initial selection makes current selection empty", function(){
+        s.init();
+
+        expect(s.get().selectedLabels).to.eql({});
+      });
+
+      it("undefined initial selection makes selectionChanged = false", function(){
+        s.init();
+
+        expect(s.get().selectionChanged).to.be.false;
+      });
+
+       it("with initial selection makes current selection clone of initial", function(){
+        var o = {a : {}}; 
+        s.init(o);
+
+        expect(s.get().selectedLabels).to.eql(o);
+        expect(s.get().selectedLabels).to.not.equal(o);
+      });
+
+      it("with initial selection makes selectionChanged = false", function(){
+        s.init({a : {}});
+
+        expect(s.get().selectionChanged).to.be.false;
+      });
+    });
+
+    describe("select", function(){
+      it("intial selection = 'a', selecting 'a' unselects it", function(){
+        s.init({a : {}});
+        s.select('a');
+
+        expect(s.get().selectedLabels).to.eql({})
+      });
+
+      it("changing selection will set selectionChanged = true", function(){
+        s.init({a : {}});
+        s.select('a');
+
+        expect(s.get().selectionChanged).to.be.true;
+      });
+
+      it("changing selection back to intial state will set selectionChanged = false", function(){
+        s.init({a : {}});
+        s.select('a');
+        s.select('a');
+
+        expect(s.get().selectionChanged).to.be.false;
+      });
+
+      it("selecting new label, adds it to current selection", function(){
+        s.init();
+        s.select('a');
+
+        expect(s.get().selectedLabels).to.eql({ a : {}});
+      });
+    });
+  });
+
  
 });
