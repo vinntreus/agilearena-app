@@ -41,7 +41,13 @@
       searchField : "#add_label",
       template : template,      
       labels : labels,
-      selectedLabels : {a : {}}
+      selectedLabels : {a : {}},
+      onApply : function(e){
+        console.log("apply:", e);
+      },
+      onCreate : function(e){
+        console.log("create:", e);
+      }
     });
     labelSelector.search();
   </script>

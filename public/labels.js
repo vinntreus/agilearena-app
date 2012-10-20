@@ -93,22 +93,34 @@ aa.labelSearch = (function(){
   };
   var setupEvents = function(){
     _searchField.keyup(function(e){ 
-      search(_searchField.val());        
+      
+      if(e.keyCode === 13){ //press enter        
+        $(".create-label").trigger("click");
+      }
+      else{
+        search(_searchField.val());
+      }
     });
 
     _template.element().on("click", function(e){
       var target = $(e.target);      
       if(target.is(".label")){
-        updateState(target.data("label"));
+        selectLabel(target.data("label"));
       }
       else if(target.parent().is(".label"))
       {
-        updateState(target.parent().data("label"));
+        selectLabel(target.parent().data("label"));
+      }
+      else if(target.is(".apply-label")){
+        _onApply(_searchResult.selectedLabels);
+      }
+      else if(target.is(".create-label") || target.parent().is(".create-label")){
+        _onCreate(_searchResult.query);
       }
     });
   };
   
-  var updateState = function(l){
+  var selectLabel = function(l){
     var index = _searchResult.matches.indexOf(l);
     var match = _searchResult.matches[index];
 
@@ -131,6 +143,8 @@ aa.labelSearch = (function(){
       _searchField = $(options.searchField);
       _template = options.template;
       _selectedLabels = options.selectedLabels || {};
+      _onApply = options.onApply || function(e){};
+      _onCreate = options.onCreate || function(e){};
       
       setupEvents();  
     },
