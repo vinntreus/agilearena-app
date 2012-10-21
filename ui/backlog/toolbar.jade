@@ -1,7 +1,7 @@
 div.toolbar.btn-toolbar
   div.btn-group
-    button.btn.btn-danger(data-bind='visible: selectedItems().length > 0, click: removeItems') Delete
-  div.btn-group(data-bind='visible: selectedItems().length > 0')
+    button.btn.btn-danger Delete
+  div.btn-group
     button.btn.dropdown-toggle(data-toggle='dropdown') Label 
       span.caret
     ul.dropdown-menu(id='labels', data-addbacklogitemlabelurl='/backlog-item/label')
