@@ -8,33 +8,9 @@ block body
         = ' Admin'
       a.btn.pull-right(href="/backlogs/#{backlog._id}/0") History
     
-  .well
-    form.form-inline(method='post', action='/backlog-item/create', id='add_backlogitem')
-      input(type="hidden", id='backlog_id', name='backlog_id', value='#{backlog._id}')  
-      .controls
-        span= 'Add item '
-        input.input-xlarge(type="text", name='backlog_item[description]', autofocus='autofocus') 
-        = ' '
-        button.btn(type="submit") Save
-
-  include toolbar 
-
-  table.table.table-condensed.backlog-items
-    thead
-      tr
-        th(width='2%')
-        th(width='5%') #
-        th Description      
-    tbody
-      each item, i in backlog.items
-        tr(data-id="#{item._id}")
-          td
-            input(type='checkbox')
-          td #{i + 1}
-          td
-            span(class="item-description") #{item.description}
-            each label in item.labels || []
-              span(class="label label-info") #{label}
+  include includes/add-backlog-item
+  include includes/toolbar 
+  include includes/backlog-items  
 
 //script(type='text/javascript', src='/backlog_show.js')  
   script(type='text/javascript', src='/backlog_labels.js')

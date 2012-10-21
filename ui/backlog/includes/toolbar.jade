@@ -1,0 +1,16 @@
+div.toolbar.btn-toolbar
+  div.btn-group
+    button.btn.btn-danger Delete
+  div.btn-group
+    button.btn.dropdown-toggle(data-toggle='dropdown') Label 
+      span.caret
+    ul.dropdown-menu(id='labels', data-addbacklogitemlabelurl='/backlog-item/label')
+      li
+        form.form-inline(method='post', action='/backlog/label', id='add_label')
+          input(type="hidden", id='add_label_backlog_id', name='backlog_id', value='#{backlog._id}')  
+          input(type="text", id='add_label', name='label')
+      li.suggestion
+        a(href='#', id='label-suggestion')
+      each label in labels
+        li.l
+          a(href='#') #{label}

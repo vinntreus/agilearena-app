@@ -14,4 +14,4 @@ This implementation is in nodejs
 - Use [grunt](https://github.com/cowboy/grunt) to run lint, tests etc. 
 (npm install grunt -g, to run tests => grunt test, to run lint => grunt lint,
 or to run auto => grunt watch. Will include to let grunt minify js&css)
-- Checkout [nodemon](https://github.com/remy/nodemon) (filewatcher that restarts the node-server upon changes, npm install nodemon -g)
+- Checkout [run](https://github.com/DTrejo/run.js) (filewatcher that restarts the node-server upon changes, npm install run -g)

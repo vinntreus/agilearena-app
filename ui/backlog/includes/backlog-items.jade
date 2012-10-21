@@ -1,0 +1,16 @@
+table.table.table-condensed.backlog-items
+  thead
+    tr
+      th(width='2%')
+      th(width='5%') #
+      th Description      
+  tbody
+    each item, i in backlog.items
+      tr(data-id="#{item._id}")
+        td
+          input(type='checkbox')
+        td #{i + 1}
+        td
+          span(class="item-description") #{item.description}
+          each label in item.labels || []
+            span(class="label label-info") #{label}
