@@ -77,13 +77,7 @@ aa.labelSelection = (function(){
   return {
     init : function(initialSelection){
       _initialSelection = initialSelection || {};
-      _currentSelection = {};
-
-      for(var i in _initialSelection){
-        if(_initialSelection.hasOwnProperty(i)){
-          _currentSelection[i] = _initialSelection[i];
-        }
-      }
+      _currentSelection = _.clone(_initialSelection);      
     },
     select : function(label){
       if(_currentSelection[label]){
@@ -93,7 +87,7 @@ aa.labelSelection = (function(){
         _currentSelection[label] = {};
       }
       
-      _selectionChanged = !_currentSelection.equals(_initialSelection);
+      _selectionChanged = !_.isEqual(_currentSelection, _initialSelection);
     },
     get : function(data){
       return {
@@ -171,37 +165,3 @@ aa.labelSearch = (function(){
     search : search
   }
 }());
-
-
-Object.prototype.equals = function(x)
-{
-  var p;
-  for(p in this) {
-      if(typeof(x[p])=='undefined') {return false;}
-  }
-
-  for(p in this) {
-      if (this[p]) {
-          switch(typeof(this[p])) {
-              case 'object':
-                  if (!this[p].equals(x[p])) { return false; } break;
-              case 'function':
-                  if (typeof(x[p])=='undefined' ||
-                      (p != 'equals' && this[p].toString() != x[p].toString()))
-                      return false;
-                  break;
-              default:
-                  if (this[p] != x[p]) { return false; }
-          }
-      } else {
-          if (x[p])
-              return false;
-      }
-  }
-
-  for(p in x) {
-      if(typeof(this[p])=='undefined') {return false;}
-  }
-
-  return true;
-}
