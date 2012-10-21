@@ -13,7 +13,7 @@ block body
       input(type="hidden", id='backlog_id', name='backlog_id', value='#{backlog._id}')  
       .controls
         span= 'Add item '
-        input.input-xlarge(type="text", name='backlog_item[description]') 
+        input.input-xlarge(type="text", name='backlog_item[description]', autofocus='autofocus') 
         = ' '
         button.btn(type="submit") Save
 

@@ -12,12 +12,13 @@ var createBacklogItem = function(req, res){
     if(error != null){
       res.send(error, 500);
     }
-    else {
-      console.log(res);
-      if(res.contentType === 'application/json')
+    else {            
+      if(res.contentType === 'application/json'){
         res.send({"_id" : itemId}, 200);
-      else
+      }
+      else{
         res.redirect('/backlogs/' + options.backlogId);
+      }
     }
   });  
 };
