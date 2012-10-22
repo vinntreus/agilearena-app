@@ -1,0 +1,13 @@
+ <script type="text/template" id="label_template">   
+      <% _.each(matches, function(l){ %>
+          <li class='label <%= selectedLabels[l] ? 'selected' : '' %>' data-label='<%= l %>'>
+            <%= l.replace(query, "<span class='match'>" + query + "</span>") %>
+          </li>
+      <% }); %>
+      <% if(!exactMatch && query){ %>
+          <li class='create-label'>Create <span class='match'><%= query %></span></li>
+      <% } %>
+      <% if(selectionChanged){ %>
+          <li class='apply-label'>Apply</li>
+      <% } %>
+  </script>

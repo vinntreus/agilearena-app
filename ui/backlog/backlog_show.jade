@@ -8,14 +8,40 @@ block body
         = ' Admin'
       a.btn.pull-right(href="/backlogs/#{backlog._id}/0") History
     
-  include includes/add-backlog-item
-  include includes/toolbar 
-  include includes/backlog-items  
+  include includes/add_backlogitem
+  include includes/toolbar
+  include includes/labels_template.html
+  include includes/backlogitems  
 
-//script(type='text/javascript', src='/backlog_show.js')  
-  script(type='text/javascript', src='/backlog_labels.js')
+append scripts
+  script(src='/aa.backlogitems.js')
+  script(src='/aa.remove_backlogitem.js')
+  script(src='/aa.labels.js')
   script(type='text/javascript')
-    var backlogItems = !{JSON.stringify(backlog.items)};
-    var view = new BacklogView(backlogItems);
-    view.init();
-    labels.init();
+    aa.backlogitems.init();
+    aa.removeBacklogItem.init();
+    $("#add_label_form").click(function(e){ e.stopPropagation();});
+    var labels = aa.labels;
+    labels.load(!{JSON.stringify(labels)});
+    
+    var template = aa.labelTemplate;
+    template.setTemplate("#label_template");
+    template.setTemplateElement("#labels");   
+
+    var selection = aa.labelSelection;
+    selection.init(); 
+
+    var labelSearcher = aa.labelSearch;
+    labelSearcher.init({      
+      searchField : "#add_label_textfield",
+      template : template,      
+      labels : labels,
+      selection : selection,
+      onApply : function(e){
+        console.log("apply:", e);
+      },
+      onCreate : function(e){
+        console.log("create:", e);
+      }
+    });
+    

@@ -9,7 +9,7 @@ table.table.table-condensed.backlog-items
       tr(data-id="#{item._id}")
         td
           input(type='checkbox')
-        td #{i + 1}
+        td(class='sortorder') #{i + 1}
         td
           span(class="item-description") #{item.description}
           each label in item.labels || []
