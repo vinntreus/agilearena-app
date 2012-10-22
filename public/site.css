@@ -40,6 +40,11 @@ table.backlog-items td
   padding:0 20px;
 }
 
+.toolbar-container
+{
+  display: none;
+}
+
 /* overrides */
 .well .form-inline
 {
