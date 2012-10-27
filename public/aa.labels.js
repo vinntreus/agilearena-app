@@ -89,11 +89,14 @@ aa.labelSelection = (function(){
       
       _selectionChanged = !_.isEqual(_currentSelection, _initialSelection);
     },
-    get : function(data){
+    get : function(){
       return {
         selectionChanged : _selectionChanged,
         selectedLabels : _currentSelection
       };      
+    },
+    list : function(){
+      return _.keys(_currentSelection);
     }
   };
 }());
@@ -135,12 +138,12 @@ aa.labelSearch = (function(){
         target = target.parent("li");
       }
 
-      if(target.is(".label")){
+      if(target.is(".label-c")){
         _selection.select(target.data("label"));
         render();
       }     
       else if(target.is(".apply-label")){
-        _onApply(_selection.get());
+        _onApply(_selection.list());
       }
       else if(target.is(".create-label")){
         _onCreate(_searchResult.query);
@@ -164,4 +167,72 @@ aa.labelSearch = (function(){
     },
     search : search
   }
+}());
+
+aa.backlogLabels = (function(){
+  var _labels,
+      _template,
+      _selection,
+      _searcher,
+      _createLabelForm;
+
+  var onApplyExistingLabel = function(labels){
+    var data = {
+      backlog_id : $("#add_label_backlog_id").val(),
+      items : aa.backlogitems.getSelectedItemsId(),
+      labels : labels
+    };
+    $.post("/backlog-item/label", data, function(d){
+      aa.backlogitems.setLabels(data.labels);
+      _selection.init();
+      aa.backlogitems.clearSelection();
+      $("#toggle_labels").trigger("click");      
+    }).error(function(r){
+      alert(r.responseText);
+    });
+  };
+  var onCreateNewLabel = function(label){
+    var data = _createLabelForm.serialize();
+    data.items = aa.backlogitems.getSelectedItemsId();
+    $.post(_createLabelForm.attr("action"), data, function(d){
+      console.log("created");
+    }).error(function(r){
+      alert(r.responseText);
+    });
+  };
+
+  return {
+    init : function(labelData){
+      _labels = aa.labels;
+      _labels.load(labelData);
+
+      _template = aa.labelTemplate;
+      _template.setTemplate("#label_template");
+      _template.setTemplateElement("#labels");
+
+      _selection = aa.labelSelection;
+      _selection.init();
+
+      _searcher = aa.labelSearch;
+      _searcher.init({
+        searchField : "#add_label_textfield",
+        template : _template,      
+        labels : _labels,
+        selection : _selection,
+        onApply : onApplyExistingLabel,
+        onCreate : onCreateNewLabel
+      });
+
+      $("#toggle_labels").on("click", function(){
+        $("#add_label_textfield").val('');                
+        _searcher.search();
+        $("#add_label_textfield").focus();
+      });
+
+      _createLabelForm = $("#add_label_form");
+
+      //to avoid menu from closing
+      $("#label-menu").click(function(e){ e.stopPropagation();});      
+    }
+  };
 }());

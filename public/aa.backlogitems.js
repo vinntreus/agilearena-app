@@ -12,7 +12,7 @@ aa.backlogitems = (function(){
   };
 
   var toggleToolbar = function(){
-    var showToolbar = $(".selected", _container).length > 0;    
+    var showToolbar = _getSelected().length > 0;    
     showToolbar ? _toolbar.show() : _toolbar.hide();    
   };  
 
@@ -24,6 +24,27 @@ aa.backlogitems = (function(){
     });    
   }
 
+  var _getSelected = function(){
+    return $(".selected", _container);
+  }
+
+  var getSelectedItemsId = function(){
+    return _getSelected().map(function(){
+      return $(this).data("id");
+    }).get();    
+  };
+
+  var setLabels = function(labelData){
+    var items = _getSelected();
+    var labels = _.map(labelData, function(l){
+      var el = $("<span class='label label-info'></span>");
+      el.text(l);
+      return el;
+    });
+    items.find(".label").remove();
+    items.find(".item-description").after(labels);
+  };
+
   return {
     init : function(){
       _container = $(".backlog-items");
@@ -31,6 +52,12 @@ aa.backlogitems = (function(){
       _initSelectItems();
     },
     setSortOrder : setSortOrder,
-    toggleToolbar : toggleToolbar
+    toggleToolbar : toggleToolbar,
+    getSelectedItemsId : getSelectedItemsId,
+    setLabels : setLabels,
+    clearSelection : function(){
+      $(".backlog-items .selected").removeClass("selected");
+      $(".backlog-items input[type='checkbox']").prop("checked", false);
+    }
   };
 }());

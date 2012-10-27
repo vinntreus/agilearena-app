@@ -7,28 +7,29 @@ var addedLabelEvent = function(data){
     type : "AddedBacklogItemLabelEvent",
     data : data,
     run : function(backlog){
-      var id = this.data.id;
-      var label = this.data.label;
-      backlog.items.forEach(function(item){
-        if(item._id.toString() === id.toString()){
-          item.labels = item.labels || [];
-          item.labels.push(label);
-          return false;
-        }
-      });
+      var ids = this.data.item_ids;
+      var labels = this.data.labels;
+      ids.forEach(function(id){
+        backlog.items.forEach(function(item){
+          if(item._id.toString() === id.toString()){
+            item.labels = labels;
+            return false;
+          }
+        });
+      });      
     }
   };
 };
 
-var addLabel = function(options, callback){
-  var e = addedLabelEvent({ label: options.label, id : options.backlogItemId });
+var addLabel = function(options, callback){  
+  var e = addedLabelEvent({ labels: options.labels, item_ids : options.item_ids });
   var o = {
     arId : options.backlogId,
     arType : Backlog,
     events : [e],
     createdBy : options.createdBy,
-    runCommand : function(root) {
-      return root.addLabelToItem(e.data.id, e.data.label);
+    runCommand : function(root) {      
+      return root.addLabelToItem(e.data.item_ids, e.data.labels);
     },
     onUpdateReadModel : backlogReadstore.addLabelToBacklogItem,
     loggingEnabled : true

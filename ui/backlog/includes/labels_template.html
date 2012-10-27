@@ -1,7 +1,7 @@
  <script type="text/template" id="label_template">   
       <% _.each(matches, function(l){ %>
-          <li class='label <%= selectedLabels[l] ? 'selected' : '' %>' data-label='<%= l %>'>
-            <%= l.replace(query, "<span class='match'>" + query + "</span>") %>
+          <li class='label-c <%= selectedLabels[l] ? 'selected' : '' %>' data-label='<%= l %>'>
+            <%= l.replace(query, "<span class='label-match'>" + query + "</span>") %>
           </li>
       <% }); %>
       <% if(!exactMatch && query){ %>

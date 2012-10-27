@@ -2,21 +2,18 @@ var handler = require(NODE_APPDIR + '/commands/backlogitem_labels');
 
 //ACTIONS
 var addLabel = function(req, res){  
-  var ids = req.body.backlog_item_ids;
-
   var options = {
     backlogId : req.body.backlog_id,
-    backlogItemId : ids.pop(),
-    label : req.body.label,
+    item_ids : req.body.items,
+    labels : req.body.labels,
     createdBy : req.user
   };
-
   handler.addLabel(options, function(error, itemId){
     if(error != null){
       res.send(error, 500);
     }
     else {      
-      res.send({"_id" : itemId}, 200);
+      res.send({}, 200);
     }
   });  
 };

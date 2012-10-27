@@ -11,6 +11,6 @@ table.table.table-condensed.backlog-items
           input(type='checkbox')
         td(class='sortorder') #{i + 1}
         td
-          span(class="item-description") #{item.description}
-          each label in item.labels || []
-            span(class="label label-info") #{label}
+          span(class="item-description") #{item.description}          
+          each label, i in item.labels || []
+            span(class="label label-info")= label[i]

@@ -20,28 +20,5 @@ append scripts
   script(type='text/javascript')
     aa.backlogitems.init();
     aa.removeBacklogItem.init();
-    $("#add_label_form").click(function(e){ e.stopPropagation();});
-    var labels = aa.labels;
-    labels.load(!{JSON.stringify(labels)});
-    
-    var template = aa.labelTemplate;
-    template.setTemplate("#label_template");
-    template.setTemplateElement("#labels");   
-
-    var selection = aa.labelSelection;
-    selection.init(); 
-
-    var labelSearcher = aa.labelSearch;
-    labelSearcher.init({      
-      searchField : "#add_label_textfield",
-      template : template,      
-      labels : labels,
-      selection : selection,
-      onApply : function(e){
-        console.log("apply:", e);
-      },
-      onCreate : function(e){
-        console.log("create:", e);
-      }
-    });
-    
+    var a = !{JSON.stringify(backlog.items[0].labels)}
+    aa.backlogLabels.init(!{JSON.stringify(labels)});

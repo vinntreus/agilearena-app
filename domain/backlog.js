@@ -7,24 +7,16 @@ function Backlog (options){
   this.labels = options.labels || [];
 }
 
-Backlog.prototype.addLabelToItem = function(id, label){
-	var item;
-	for(var i = 0, l = this.items.length; i < l; i++){
-		if(this.items[i]._id.toString() === id.toString()){
-			item = this.items[i];
-			break;
+Backlog.prototype.addLabelToItem = function(ids, labels){	
+	var that = this;
+	ids.forEach(function(id){
+		for(var i = 0, l = that.items.length; i < l; i++){
+			if(that.items[i]._id.toString() === id.toString()){
+				that.items[i].labels = labels || [];
+				break;
+			}
 		}
-	}
-	if(!item){
-		return "Item does not exist";
-	}
-	item.labels = item.labels || [];
-	for(var j = 0, k = item.labels.length; j < k; j++){
-		if(item.labels[j] === label){
-			return "Item already has that label";
-		}
-	}
-	item.labels.push(label);
+	});
 };
 
 Backlog.prototype.addLabel = function(label){

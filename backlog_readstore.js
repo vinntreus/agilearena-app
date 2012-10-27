@@ -7,9 +7,11 @@ var backlogReadstore = (function(){
 	};
 
 	var addLabelToBacklogItem = function(backlogId, data, callback){
-		var query = { '_id' : db.toObjectID(backlogId), 'items._id' : db.toObjectID(data.id) };
-		var updateOperation = {$push: {'items.$.labels':data.label}};
-		db.backlogs.update(query, updateOperation, callback);
+		data.item_ids.forEach(function(id){
+			var query = { '_id' : db.toObjectID(backlogId), 'items._id' : db.toObjectID(id) };
+			var updateOperation = {$set : {'items.$.labels': data.labels}};
+			db.backlogs.update(query, updateOperation, callback);
+		});		
 	};
 
 	var addBacklogItem = function(backlogId, backlogItem, callback){			

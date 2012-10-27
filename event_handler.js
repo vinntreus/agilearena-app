@@ -20,7 +20,7 @@ var processEvent = function(options, callback){
   loggingEnabled = options.loggingEnabled || false;
   onUpdateReadModel = options.onUpdateReadModel;
   es.getAggregateRoot(options.arId, options.arType, null, function(ar, events){
-    log("found aggregate root");
+    log("found aggregate root", ar);
     var result = options.runCommand(ar);
     if(result != null){ 
       callback (result);

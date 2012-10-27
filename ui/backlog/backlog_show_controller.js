@@ -10,6 +10,7 @@ var show = function(req, res){
       user : req.user,
       labels : doc.labels || []
     };
+    console.log(doc.items[0]);
     res.render('./backlog/backlog_show', model);    
   }); 
 };
