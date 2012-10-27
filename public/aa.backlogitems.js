@@ -39,6 +39,7 @@ aa.backlogitems = (function(){
       initSelectedEvents();
 
     },
-    setSortOrder : setSortOrder
+    setSortOrder : setSortOrder,
+    toggleToolbar : toggleToolbar
   };
 }());

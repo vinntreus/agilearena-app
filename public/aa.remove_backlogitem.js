@@ -26,6 +26,7 @@ aa.removeBacklogItem = (function(){
       $(item).remove();
     });
     aa.backlogitems.setSortOrder();
+    aa.backlogitems.toggleToolbar();
   };
 
   var initEvents = function(){    
