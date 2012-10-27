@@ -1,29 +1,20 @@
 var aa = aa || {};
 
 aa.backlogitems = (function(){
-  var _container;
+  var _container,
+      _toolbar;
 
-  var toggleToolbar = function(){
-    var showToolbar = $(".selected", _container).length > 0;
-    var toolbar = $(".toolbar-container");
-    if(showToolbar){
-      toolbar.show();
-    }
-    else{
-      toolbar.hide();
-    }
-  }
-
-  var initSelectedEvents = function(){
-    
-    _container.on("click", function(e){
-      var target = $(e.target);      
-      if(target.is("input[type='checkbox']")){        
-        target.parents("tr").toggleClass("selected");
-        toggleToolbar();
-      }
+  var _initSelectItems = function(){    
+    _container.on("click", "input[type='checkbox']", function(e){
+      $(this).parents("tr").toggleClass("selected");
+      toggleToolbar();      
     });
   };
+
+  var toggleToolbar = function(){
+    var showToolbar = $(".selected", _container).length > 0;    
+    showToolbar ? _toolbar.show() : _toolbar.hide();    
+  };  
 
   var setSortOrder = function(){
     var sortorder = 1;
@@ -36,8 +27,8 @@ aa.backlogitems = (function(){
   return {
     init : function(){
       _container = $(".backlog-items");
-      initSelectedEvents();
-
+      _toolbar = $(".toolbar-container");
+      _initSelectItems();
     },
     setSortOrder : setSortOrder,
     toggleToolbar : toggleToolbar
