@@ -191,11 +191,12 @@ aa.backlogLabels = (function(){
       alert(r.responseText);
     });
   };
-  var onCreateNewLabel = function(label){
+  var onCreateNewLabel = function(label){    
     var data = _createLabelForm.serialize();
     data.items = aa.backlogitems.getSelectedItemsId();
+    
     $.post(_createLabelForm.attr("action"), data, function(d){
-      console.log("created");
+      onApplyExistingLabel([label]);
     }).error(function(r){
       alert(r.responseText);
     });
