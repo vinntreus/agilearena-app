@@ -199,7 +199,7 @@ aa.backlogLabels = (function(){
     aa.backlogitems.getSelectedItemsId().forEach(function(i){
       data.items[i] = { labels : [], dummy : 1 }; //dummy is there due to jquery bug, cannot serialize empty arrays.
     });
-    
+
     for(var i in labels.selectedLabels){
       var label = labels.selectedLabels[i];
       if(label.all){
@@ -212,9 +212,7 @@ aa.backlogLabels = (function(){
           data.items[l].labels.push(i);
         });
       }
-    }
-    
-    console.log("posting", data)
+    }    
 
     $.post("/backlog-item/label", data, function(d){
       aa.backlogitems.setLabels(data.items);
