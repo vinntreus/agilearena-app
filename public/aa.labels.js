@@ -77,7 +77,8 @@ aa.labelSelection = (function(){
   return {
     init : function(initialSelection){
       _initialSelection = initialSelection || {};
-      _currentSelection = _.clone(_initialSelection);      
+      _currentSelection = _.clone(_initialSelection);  
+      _selectionChanged = false;    
     },
     select : function(label){
       if(_currentSelection[label]){
@@ -114,7 +115,7 @@ aa.labelSearch = (function(){
     _searchResult = _labels.search(query);       
     render();
   };
-  var render = function(){    
+  var render = function(){
     var o = $.extend({}, _searchResult, _selection.get());    
     _template.render(o);
   };
@@ -184,8 +185,7 @@ aa.backlogLabels = (function(){
     };
     $.post("/backlog-item/label", data, function(d){
       aa.backlogitems.setLabels(data.labels);
-      _selection.init();
-      aa.backlogitems.clearSelection();
+      _selection.init();      
       $("#toggle_labels").trigger("click");      
     }).error(function(r){
       alert(r.responseText);
