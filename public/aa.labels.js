@@ -114,7 +114,7 @@ aa.labelSearch = (function(){
     _searchResult = _labels.search(query);       
     render();
   };
-  var render = function(){
+  var render = function(){    
     var o = $.extend({}, _searchResult, _selection.get());    
     _template.render(o);
   };
@@ -201,6 +201,15 @@ aa.backlogLabels = (function(){
     });
   };
 
+  var onOpenLabelDropdown = function(){
+    var labels = aa.backlogitems.getLabels();    
+    _selection.init(labels);
+
+    $("#add_label_textfield").val('');
+    $("#add_label_textfield").focus();
+    _searcher.search();
+  }
+
   return {
     init : function(labelData){
       _labels = aa.labels;
@@ -210,8 +219,7 @@ aa.backlogLabels = (function(){
       _template.setTemplate("#label_template");
       _template.setTemplateElement("#labels");
 
-      _selection = aa.labelSelection;
-      _selection.init();
+      _selection = aa.labelSelection;      
 
       _searcher = aa.labelSearch;
       _searcher.init({
@@ -224,9 +232,11 @@ aa.backlogLabels = (function(){
       });
 
       $("#toggle_labels").on("click", function(){
-        $("#add_label_textfield").val('');                
-        _searcher.search();
-        $("#add_label_textfield").focus();
+        var isCurrentlyOpen = $(this).parent(".btn-group").hasClass("open");
+        
+        if(!isCurrentlyOpen){
+          onOpenLabelDropdown();
+        }
       });
 
       _createLabelForm = $("#add_label_form");

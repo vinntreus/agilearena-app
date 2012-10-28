@@ -45,6 +45,15 @@ aa.backlogitems = (function(){
     items.find(".item-description").after(labels);
   };
 
+  var getLabels = function(){
+    var items = _getSelected().find(".label");    
+    var labels = {};
+    _.each(items, function(l){
+      labels[$(l).text()] = {};
+    });
+    return labels;
+  };
+
   return {
     init : function(){
       _container = $(".backlog-items");
@@ -55,6 +64,7 @@ aa.backlogitems = (function(){
     toggleToolbar : toggleToolbar,
     getSelectedItemsId : getSelectedItemsId,
     setLabels : setLabels,
+    getLabels : getLabels,
     clearSelection : function(){
       $(".backlog-items .selected").removeClass("selected");
       $(".backlog-items input[type='checkbox']").prop("checked", false);
