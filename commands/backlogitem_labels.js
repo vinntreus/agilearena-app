@@ -7,29 +7,28 @@ var addedLabelEvent = function(data){
     type : "AddedBacklogItemLabelEvent",
     data : data,
     run : function(backlog){
-      var ids = this.data.item_ids;
-      var labels = this.data.labels;
-      ids.forEach(function(id){
+      var ids = this.data.item_ids; // { 'ID' : { labels : [] } }
+      for(var id in ids){
         backlog.items.forEach(function(item){
           if(item._id.toString() === id.toString()){
-            item.labels = labels;
+            item.labels = ids[id].labels || [];
             return false;
           }
         });
-      });      
+      }
     }
   };
 };
 
 var addLabel = function(options, callback){  
-  var e = addedLabelEvent({ labels: options.labels, item_ids : options.item_ids });
+  var e = addedLabelEvent({ item_ids : options.item_ids });
   var o = {
     arId : options.backlogId,
     arType : Backlog,
     events : [e],
     createdBy : options.createdBy,
     runCommand : function(root) {      
-      return root.addLabelToItem(e.data.item_ids, e.data.labels);
+      return root.addLabelToItem(e.data.item_ids);
     },
     onUpdateReadModel : backlogReadstore.addLabelToBacklogItem,
     loggingEnabled : true

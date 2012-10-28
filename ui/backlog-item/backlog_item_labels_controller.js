@@ -4,10 +4,10 @@ var handler = require(NODE_APPDIR + '/commands/backlogitem_labels');
 var addLabel = function(req, res){  
   var options = {
     backlogId : req.body.backlog_id,
-    item_ids : req.body.items,
-    labels : req.body.labels,
+    item_ids : req.body.items,    
     createdBy : req.user
   };
+  
   handler.addLabel(options, function(error, itemId){
     if(error != null){
       res.send(error, 500);

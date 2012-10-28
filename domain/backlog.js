@@ -7,16 +7,14 @@ function Backlog (options){
   this.labels = options.labels || [];
 }
 
-Backlog.prototype.addLabelToItem = function(ids, labels){	
-	var that = this;
-	ids.forEach(function(id){
-		for(var i = 0, l = that.items.length; i < l; i++){
-			if(that.items[i]._id.toString() === id.toString()){
-				that.items[i].labels = labels || [];
-				break;
+Backlog.prototype.addLabelToItem = function(ids){	// { 'ID' : { labels : [] } }
+	for(var id in ids){
+		this.items.forEach(function(item){
+			if(item._id.toString() === id.toString()){
+				item.labels = ids[id].labels || [];
 			}
-		}
-	});
+		});		
+	}
 };
 
 Backlog.prototype.addLabel = function(label){

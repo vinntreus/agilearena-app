@@ -193,43 +193,45 @@ aa.backlogLabels = (function(){
   var onApplyExistingLabel = function(labels){
     var data = {
       backlog_id : $("#add_label_backlog_id").val(),
-      items : aa.backlogitems.getSelectedItemsId()
-      //,labels : labels
+      items : {}
     };
     
-    var items = {};
-    data.items.forEach(function(i){
-      items[i] = { labels : []};
-    })
+    aa.backlogitems.getSelectedItemsId().forEach(function(i){
+      data.items[i] = { labels : [], dummy : 1 }; //dummy is there due to jquery bug, cannot serialize empty arrays.
+    });
+    
     for(var i in labels.selectedLabels){
       var label = labels.selectedLabels[i];
       if(label.all){
-        for(var j in items){
-          items[j].labels.push(i);
+        for(var j in data.items){
+          data.items[j].labels.push(i);
         }
       }
       else{
         label.items.forEach(function(l){
-          items[l].labels.push(i);
+          data.items[l].labels.push(i);
         });
       }
     }
-    data.items = items;
-    console.log(data);
-    /*$.post("/backlog-item/label", data, function(d){
-      aa.backlogitems.setLabels(data.labels);
+    
+    console.log("posting", data)
+
+    $.post("/backlog-item/label", data, function(d){
+      aa.backlogitems.setLabels(data.items);
       _selection.init();      
       $("#toggle_labels").trigger("click");      
     }).error(function(r){
       alert(r.responseText);
-    });*/
+    });
   };
   var onCreateNewLabel = function(label){    
     var data = _createLabelForm.serialize();
     data.items = aa.backlogitems.getSelectedItemsId();
     
     $.post(_createLabelForm.attr("action"), data, function(d){
-      onApplyExistingLabel([label]);
+      var applyData = { selectedLabels : {}};
+      applyData.selectedLabels[label] = {all : true};
+      onApplyExistingLabel(applyData);
     }).error(function(r){
       alert(r.responseText);
     });

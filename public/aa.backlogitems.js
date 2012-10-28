@@ -36,13 +36,17 @@ aa.backlogitems = (function(){
 
   var setLabels = function(labelData){
     var items = _getSelected();
-    var labels = _.map(labelData, function(l){
-      var el = $("<span class='label label-info'></span>");
-      el.text(l);
-      return el;
-    });
-    items.find(".label").remove();
-    items.find(".item-description").after(labels);
+    items.each(function(index){
+      var item = $(this);      
+      var id = item.data('id');
+      var labels = _.map(labelData[id].labels, function(l){
+        var el = $("<span class='label label-info'></span>");
+        el.text(l);
+        return el;
+      });
+      item.find(".label").remove();
+      item.find(".item-description").after(labels);
+    });    
   };
 
   var getLabels = function(){
