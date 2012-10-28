@@ -76,18 +76,31 @@ aa.labelSelection = (function(){
 
   return {
     init : function(initialSelection){
-      _initialSelection = initialSelection || {};
-      _currentSelection = _.clone(_initialSelection);  
-      _selectionChanged = false;    
+      _initialSelection = initialSelection || {};      
+      _currentSelection = {};
+      _selectionChanged = false;
+
+      for(var i in _initialSelection){
+        if(_.isObject(_initialSelection[i])){
+          _currentSelection[i] = _.clone(_initialSelection[i]);
+        }
+      }
     },
     select : function(label){
-      if(_currentSelection[label]){
+      if(_currentSelection[label] && _currentSelection[label].all){
         delete _currentSelection[label];
       }
-      else{
-        _currentSelection[label] = {};
+      else if(!_currentSelection[label] && _initialSelection[label] && !_initialSelection[label].all){
+        _currentSelection[label] = _.clone(_initialSelection[label]);
       }
-      
+      else if(_initialSelection[label]){
+        _currentSelection[label] = _.clone(_initialSelection[label]);
+        _currentSelection[label].all = true;        
+      }
+      else {
+        _currentSelection[label] = { all : true };
+      }
+
       _selectionChanged = !_.isEqual(_currentSelection, _initialSelection);
     },
     get : function(){
@@ -100,7 +113,7 @@ aa.labelSelection = (function(){
       return _.keys(_currentSelection);
     }
   };
-}());
+}()); 
 
 aa.labelSearch = (function(){
   var _labels,
@@ -144,7 +157,7 @@ aa.labelSearch = (function(){
         render();
       }     
       else if(target.is(".apply-label")){
-        _onApply(_selection.list());
+        _onApply(_selection.get());
       }
       else if(target.is(".create-label")){
         _onCreate(_searchResult.query);
@@ -180,16 +193,36 @@ aa.backlogLabels = (function(){
   var onApplyExistingLabel = function(labels){
     var data = {
       backlog_id : $("#add_label_backlog_id").val(),
-      items : aa.backlogitems.getSelectedItemsId(),
-      labels : labels
+      items : aa.backlogitems.getSelectedItemsId()
+      //,labels : labels
     };
-    $.post("/backlog-item/label", data, function(d){
+    
+    var items = {};
+    data.items.forEach(function(i){
+      items[i] = { labels : []};
+    })
+    for(var i in labels.selectedLabels){
+      var label = labels.selectedLabels[i];
+      if(label.all){
+        for(var j in items){
+          items[j].labels.push(i);
+        }
+      }
+      else{
+        label.items.forEach(function(l){
+          items[l].labels.push(i);
+        });
+      }
+    }
+    data.items = items;
+    console.log(data);
+    /*$.post("/backlog-item/label", data, function(d){
       aa.backlogitems.setLabels(data.labels);
       _selection.init();      
       $("#toggle_labels").trigger("click");      
     }).error(function(r){
       alert(r.responseText);
-    });
+    });*/
   };
   var onCreateNewLabel = function(label){    
     var data = _createLabelForm.serialize();

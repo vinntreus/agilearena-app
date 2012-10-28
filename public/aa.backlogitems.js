@@ -46,11 +46,23 @@ aa.backlogitems = (function(){
   };
 
   var getLabels = function(){
-    var items = _getSelected().find(".label");    
+    var selectedItems = _getSelected();
+    var labelElements = selectedItems.find(".label");
     var labels = {};
-    _.each(items, function(l){
-      labels[$(l).text()] = {};
+    _.each(labelElements, function(l){
+      var label = $(l).text();
+      var id = $(l).parents('tr.selected').data('id');
+      if(labels[label]){
+        labels[label].count += 1;
+        labels[label].items.push(id);
+      }
+      else{
+        labels[label] = {count : 1, items : [id]};
+      }      
     });
+    for(var i in labels){
+      labels[i].all = labels[i].count === selectedItems.length;      
+    }    
     return labels;
   };
 

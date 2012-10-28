@@ -83,6 +83,11 @@ table.backlog-items td
   background-image: url('/img/tristate-checked.png');
 }
 
+#labels .partial
+{
+  background-image: url('/img/tristate-partial.png');
+}
+
 #labels .apply-label
 {
   margin: 5px 0;

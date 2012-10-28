@@ -107,32 +107,90 @@ describe("label search", function(){
 
     describe("select", function(){
       it("intial selection = 'a', selecting 'a' unselects it", function(){
-        s.init({a : {}});
+        s.init({a : { all : true}});
+
         s.select('a');
 
         expect(s.get().selectedLabels).to.eql({})
       });
 
       it("changing selection will set selectionChanged = true", function(){
-        s.init({a : {}});
+        s.init({a : { all : true}});
+
         s.select('a');
 
         expect(s.get().selectionChanged).to.be.true;
       });
 
       it("changing selection back to intial state will set selectionChanged = false", function(){
-        s.init({a : {}});
+        s.init({a : { all : true }});
+
         s.select('a');
-        s.select('a');
+        s.select('a');        
 
         expect(s.get().selectionChanged).to.be.false;
       });
 
       it("selecting new label, adds it to current selection", function(){
         s.init();
+
         s.select('a');
 
-        expect(s.get().selectedLabels).to.eql({ a : {}});
+        expect(s.get().selectedLabels).to.eql({ a : { all : true }});
+      });
+
+      it("changing partial selection first time set selectionChanged = true", function(){
+        s.init({a : { all : false }});
+        
+        s.select('a');        
+
+        expect(s.get().selectionChanged).to.be.true;        
+      });
+
+      it("changing partial selection first time selects all", function(){
+        s.init({a : { all : false }});
+
+        s.select('a');
+
+        expect(s.get().selectedLabels['a'].all).to.be.true;
+      });
+
+      it("changing partial selection second time set selectionChanged = true", function(){
+        s.init({a : { all : false }});
+        
+        s.select('a');
+        s.select('a');        
+
+        expect(s.get().selectionChanged).to.be.true;        
+      });
+
+      it("changing partial selection second time deselects all", function(){
+        s.init({a : { all : false }});
+
+        s.select('a');
+        s.select('a');
+
+        expect(s.get().selectedLabels).to.eql({});
+      });
+
+      it("changing partial selection third time set selectionChanged = false", function(){
+        s.init({a : { all : false }});
+        
+        s.select('a');
+        s.select('a');
+        s.select('a');
+
+        expect(s.get().selectionChanged).to.be.false;
+      });
+
+      it("changing partial selection second time deselects all", function(){
+        s.init({a : { all : false }});
+
+        s.select('a');
+        s.select('a');
+        s.select('a');
+
+        expect(s.get().selectedLabels['a'].all).to.be.false;
       });
     });
   });
