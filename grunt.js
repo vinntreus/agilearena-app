@@ -22,15 +22,31 @@ module.exports = function(grunt) {
       }
     },
     concat: {
+      css : {
+        src : ['public/libs/bootstrap-simplex/bootstrap.css',
+               'public/libs/bootstrap/css/bootstrap-responsive.css',
+               'public/site.css'],
+        dest : 'public/dist/styles.css'
+      },
       dist: {
-        src: ['<banner:meta.banner>', '<file_strip_banner:lib/<%= pkg.name %>.js>'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['public/libs/jquery-1.8.2.js', 
+              'public/libs/underscore.js', 
+              'public/libs/bootstrap/js/bootstrap.js',
+              'public/aa.*.js'],
+        dest: 'public/dist/scripts.js'
       }
-    },
-    min: {
+    },    
+    min: {     
       dist: {
-        src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-        dest: 'dist/<%= pkg.name %>.min.js'
+        src: ['public/dist/scripts.js'],
+        dest: 'public/dist/scripts.min-<%= grunt.template.today("yyyymmdd") %>.js'
+      }
+    },    
+    mincss: {
+      compress: {
+        files: {
+          'public/dist/styles.min-<%= grunt.template.today("yyyymmdd") %>.css': ['public/dist/styles.css']
+        }
       }
     },
     watch: {
@@ -63,6 +79,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-simple-mocha');
+  grunt.loadNpmTasks('grunt-contrib-mincss');
 
   // Default task.
   grunt.registerTask('default', 'lint simplemocha');
@@ -82,4 +99,6 @@ module.exports = function(grunt) {
     replay.clear(grunt, done);
   });
 
+  grunt.registerTask('css', 'concat:css mincss');
+  grunt.registerTask('js', 'concat:dist min:dist');
 };

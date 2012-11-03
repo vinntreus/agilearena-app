@@ -14,11 +14,7 @@ block body
   include includes/backlogitems  
 
 append scripts
-  script(src='/aa.backlogitems.js')
-  script(src='/aa.remove_backlogitem.js')
-  script(src='/aa.labels.js')
   script(type='text/javascript')
     aa.backlogitems.init();
-    aa.removeBacklogItem.init();
-    var a = !{JSON.stringify(backlog.items[0].labels)}
+    aa.removeBacklogItem.init();    
     aa.backlogLabels.init(!{JSON.stringify(labels)});
