@@ -54,6 +54,13 @@ table.backlog-items td
 
 /* labels */
 
+#add_label_textfield
+{
+  width:80%;
+  margin-left: 7%;
+  margin-top: 7%;
+}
+
 #labels
 {
   list-style-type: none;
