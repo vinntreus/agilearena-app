@@ -114,7 +114,9 @@ aa.labelSelection = (function(){
     }
   };
 }()); 
-
+var KEYCODE = {
+  ENTER : 13
+};
 aa.labelSearch = (function(){
   var _labels,
       _searchField,
@@ -136,12 +138,16 @@ aa.labelSearch = (function(){
     _searchField.off("keyup");
     _template.element().off("click");
 
-    _searchField.keyup(function(e){       
-      if(e.keyCode === 13){ //press enter        
+    _searchField.keydown(function(e){
+      if(e.keyCode === KEYCODE.ENTER){
+        e.preventDefault();
         $(".create-label").trigger("click");
       }
-      else{
-        search(_searchField.val());        
+    });
+
+    _searchField.keyup(function(e){
+      if(e.keyCode !== KEYCODE.ENTER){
+        search(_searchField.val());
       }
     });
 
