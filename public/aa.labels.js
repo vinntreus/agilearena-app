@@ -166,6 +166,7 @@ aa.labelSearch = (function(){
         _onApply(_selection.get());
       }
       else if(target.is(".create-label")){
+        _selection.select(_searchResult.query);
         _onCreate(_searchResult.query);
       }
     });
@@ -202,24 +203,26 @@ aa.backlogLabels = (function(){
       items : {}
     };
     
+    //init selection without labels
     aa.backlogitems.getSelectedItemsId().forEach(function(i){
       data.items[i] = { labels : [], dummy : 1 }; //dummy is there due to jquery bug, cannot serialize empty arrays.
     });
 
+    //apply selected labels
     for(var i in labels.selectedLabels){
       var label = labels.selectedLabels[i];
-      if(label.all){
-        for(var j in data.items){
+      if(label.all){ //should label be applied to complete selection
+        for(var j in data.items){ //apply label on every selected item
           data.items[j].labels.push(i);
         }
       }
       else{
-        label.items.forEach(function(l){
+        label.items.forEach(function(l){ //apply label on certain items
           data.items[l].labels.push(i);
         });
       }
     }    
-
+    
     $.post("/backlog-item/label", data, function(d){
       aa.backlogitems.setLabels(data.items);
       _selection.init();      
@@ -233,9 +236,9 @@ aa.backlogLabels = (function(){
     data.items = aa.backlogitems.getSelectedItemsId();
     
     $.post(_createLabelForm.attr("action"), data, function(d){
-      var applyData = { selectedLabels : {}};
-      applyData.selectedLabels[label] = {all : true};
-      onApplyExistingLabel(applyData);
+      var selection = _selection.get();        
+      selection.selectedLabels[label] = {all : true};
+      onApplyExistingLabel(selection);
     }).error(function(r){
       alert(r.responseText);
     });
