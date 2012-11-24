@@ -13,6 +13,9 @@ aa.labels = (function(){
   };
 
   return {
+    add : function(item){
+      _items.push(item);
+    },
     load : function(items){
       _items = items || [];
     },
@@ -236,6 +239,7 @@ aa.backlogLabels = (function(){
     data.items = aa.backlogitems.getSelectedItemsId();
     
     $.post(_createLabelForm.attr("action"), data, function(d){
+      _labels.add(label);
       var selection = _selection.get();        
       selection.selectedLabels[label] = {all : true};
       onApplyExistingLabel(selection);
@@ -254,7 +258,7 @@ aa.backlogLabels = (function(){
   }
 
   return {
-    init : function(labelData){
+    init : function(labelData){      
       _labels = aa.labels;
       _labels.load(labelData);
 
