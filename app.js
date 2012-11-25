@@ -6,6 +6,7 @@ var app = express();
 var passport = require('passport');
 var authentication = require('./authentication');
 var RedisStore = require('connect-redis')(express);
+var fs = require('fs');
 
 // Configuration
 app.configure(function(){
@@ -23,11 +24,26 @@ app.configure(function(){
 
 
 
-app.configure('development', function(){
+app.configure('development', function(){  
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+  app.set('scripts', [
+    '/libs/jquery-1.8.2.js',
+    '/libs/underscore.js',
+    '/libs/bootstrap/js/bootstrap.js',
+    '/aa.backlogitems.js',
+    '/aa.labels.js',
+    '/aa.remove_backlogitem.js'
+    ]);  
 });
 app.configure('production', function(){
   app.use(express.errorHandler());
+  
+  var javascriptFile = "";
+  fs.readdirSync(__dirname + '/public/dist').forEach(function(f){
+    if(f.match(/.js$/gi))
+      javascriptFile = f;
+  })
+  app.set('scripts', ['/dist/' + javascriptFile]);  
 });
 
 authentication.setup(passport);
