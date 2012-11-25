@@ -15,9 +15,11 @@ aa.labels = (function(){
   return {
     add : function(item){
       _items.push(item);
+      _items.sort();
     },
     load : function(items){
       _items = items || [];
+      _items.sort();
     },
     all : function(){
       return _items.slice(0);
