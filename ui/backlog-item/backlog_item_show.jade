@@ -1,0 +1,7 @@
+extends ../layout
+
+block body 
+  .page-header
+    h1= item.description
+      a.btn.pull-right(href="/backlogs/#{backlogId}") Back
+    p= created

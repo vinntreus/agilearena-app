@@ -6,9 +6,7 @@
   }
 }
 
-.btn,
-.item-description,
-.backlog-items .label
+.btn
 {
   margin-right:4px;
 }
@@ -18,21 +16,13 @@
   margin-left:10em;
 }
 
-table.backlog-items td
-{
-  vertical-align: middle;
-}
-
 .nav > li > a:hover 
 {
   text-decoration: none;
   background-color: #EEE;
 }
 
-.backlog-items .selected
-{
-  background-color:#FFC;
-}
+/* toolbar */
 
 .toolbar
 {
@@ -44,6 +34,23 @@ table.backlog-items td
 .toolbar-container
 {
   display: none;
+}
+
+/* backlog items */
+
+table.backlog-items td
+{
+  vertical-align: middle;
+}
+
+.backlog-items .selected
+{
+  background-color:#FFC;
+}
+
+.backlog-items .label
+{
+  margin-left:4px;
 }
 
 /* overrides */
