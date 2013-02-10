@@ -12,6 +12,8 @@ block body
   form.well(method='post', action='/backlog/create')
     div.block
       label Name:
-      input(type="text", name='backlog[name]')
+      input(type="text", name='backlog[name]', id="backlog_name")
     div.block
       button.btn.btn-primary(type="submit") Ok
+  script(type='text/javascript')
+    document.getElementById("backlog_name").focus();
