@@ -15,7 +15,9 @@
   },
   "devDependencies": {
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "grunt-simple-mocha": "*",
+    "grunt-contrib-mincss": "*"
   },
   "subdomain": "agilearena",
   "scripts": {
