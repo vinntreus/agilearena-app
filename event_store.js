@@ -41,7 +41,7 @@ var eventStore = (function(){
 	  	if(err != null)
 	  		throw err;  	
 
-	    var aggregate = db.bson_serializer.BSON.deserialize(rawAggregate, {evalFunctions:true, cacheFunctions:true});
+	    var aggregate = db.BSON.deserialize(rawAggregate, {evalFunctions : true, cacheFunctions: true})
 	    var root = _buildAggregateRoot(aggregate.events, type, version);
 	    callback(root.aggregate, root.events);
 	  });

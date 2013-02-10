@@ -13,20 +13,20 @@ Backlog.prototype.addLabelToItem = function(ids){	// { 'ID' : { labels : [] } }
 			if(item._id.toString() === id.toString()){
 				item.labels = ids[id].labels || [];
 			}
-		});		
+		});
 	}
 };
 
 Backlog.prototype.addLabel = function(label){
 	var validationResult = this.validateAddLabel(label);
 	if(validationResult == null){
-		this.labels.push(label);				
+		this.labels.push(label);
 	}
 	return validationResult;
 };
 
 Backlog.prototype.validateAddLabel = function(label){
-	if(this.labels.indexOf(label) > -1)	{
+	if(this.labels.indexOf(label) > -1){
 		return "Label already exist";
 	}
 	return null;
@@ -41,9 +41,9 @@ Backlog.prototype.addItem = function(item){
 };
 
 Backlog.prototype.deleteItem = function(id){
-	var foundItemAtIndex = -1;			
+	var foundItemAtIndex = -1;
 	
-	this.items.every(function(item, index){				
+	this.items.every(function(item, index){
 		if(item._id.toString() === id.toString()) {
 			foundItemAtIndex = index;
 			return false;
@@ -54,7 +54,7 @@ Backlog.prototype.deleteItem = function(id){
 	if(foundItemAtIndex > -1){
 		this.items.splice(foundItemAtIndex, 1);
 		return true;
-	}			
+	}
 	return false;
 };
 
