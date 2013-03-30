@@ -1,10 +1,12 @@
 var Backlog = require('../domain/backlog.js');
-var assert = require('assert');
+var assert = require('chai').assert;
+var _ = require('underscore');
 
 
-var createEmptyBacklog = function(options){
-  options = options || {_id : 1, name : "a", owner : "b", created : "c"};
-  return new Backlog(options);  
+var createBacklog = function(options){
+  var defaultOptions = {_id : 1, name : "a", owner : "b", created : "c"};
+  options = _.extend(defaultOptions, options);
+  return new Backlog(options);
 };
 
 
@@ -12,7 +14,8 @@ describe("Backlog", function(){
 
   it('create with valid args', function() {
     var options = {_id : 1, name : "a", owner : "b", created : "c"};
-    var b = createEmptyBacklog(options);
+    
+    var b = createBacklog(options);
     
     assert.equal(b._id, 1, 'id should be one');
     assert.equal(b.name, "a", 'name should be a');
@@ -20,33 +23,60 @@ describe("Backlog", function(){
     assert.equal(b.created, "c", 'created should be c');
   });
 
-  it('can add item with description', function(){
-    var b = createEmptyBacklog();
-    var result = b.addItem({ description : "a"});
+  describe("add item", function(){
+    it('can add item with description', function(){
+      var b = createBacklog();
+      
+      var result = b.addItem({ description : "a"});
 
-    assert.equal(result, null, "should not have error messages");
-    assert.ok(b.items.length === 1, "should have one item");
+      assert.equal(result, null, "should not have error messages");
+      assert.ok(b.items.length === 1, "should have one item");
+    });
+
+    it('add item throws when no item', function(){
+      var b = createBacklog();
+      
+      var result = b.addItem();
+
+      assert.equal(result, "Cannot add empty item");
+    });
+
+    it('add item throws when item has no description', function(){
+      var b = createBacklog();
+      
+      var result = b.addItem({ a : "b"});
+
+      assert.equal(result, "Cannot add empty item");
+    });
+
+    it('add item throws when item has empty description', function(){
+      var b = createBacklog();
+      
+      var result = b.addItem({ description : ""});
+      
+      assert.equal(result, "Cannot add empty item");
+    });
   });
 
-  it('add item throws when no item', function(){
-    var b = createEmptyBacklog();
-    var result = b.addItem();
+  describe("add label", function(){
+    it("one label - should add label to item", function(){
+      var b = createBacklog({ items : [{ _id : "a"}]});
 
-    assert.equal(result, "Cannot add empty item");
-  });
+      b.addLabelToItem({"a" : {labels : ["b"]}});
 
-  it('add item throws when item has no description', function(){
-    var b = createEmptyBacklog();
-    var result = b.addItem({ a : "b"});
+      assert.include(b.items[0].labels, "b");
+      assert.equal(b.items[0].labels.length, 1);
+    });
 
-    assert.equal(result, "Cannot add empty item");
-  });
+    it("two labels - should add BOTH labels to item", function(){
+      var b = createBacklog({ items : [{ _id : "a"}]});
 
-  it('add item throws when item has empty description', function(){
-    var b = createEmptyBacklog();
-    var result = b.addItem({ description : ""});
-    
-    assert.equal(result, "Cannot add empty item");
+      b.addLabelToItem({"a" : {labels : ["b", "c"]}});
+
+      assert.include(b.items[0].labels, "b");
+      assert.include(b.items[0].labels, "c");
+      assert.equal(b.items[0].labels.length, 2);
+    });
   });
 
 });

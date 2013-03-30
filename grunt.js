@@ -99,6 +99,7 @@ module.exports = function(grunt) {
     replay.clear(grunt, done);
   });
 
+  grunt.registerTask('test', 'simplemocha');
   grunt.registerTask('css', 'concat:css mincss');
   grunt.registerTask('js', 'concat:dist min:dist');
 };
