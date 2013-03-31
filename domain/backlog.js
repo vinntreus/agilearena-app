@@ -7,14 +7,16 @@ function Backlog (options){
   this.labels = options.labels || [];
 }
 
-Backlog.prototype.addLabelToItem = function(ids){	// { 'ID' : { labels : [] } }
-	for(var id in ids){
-		this.items.forEach(function(item){
-			if(item._id.toString() === id.toString()){
-				item.labels = ids[id].labels || [];
+Backlog.prototype.addLabelToItem = function(items){	// { 'ITEM_ID' : { labels : [] } }
+	var that = this;
+	Object.getOwnPropertyNames(items).forEach(function(itemId){
+		that.items.some(function(item){			
+			if(that.matchItem(item, itemId)){
+				item.labels = items[itemId].labels || [];
+				return true;
 			}
 		});
-	}
+	});
 };
 
 Backlog.prototype.addLabel = function(label){
@@ -41,10 +43,11 @@ Backlog.prototype.addItem = function(item){
 };
 
 Backlog.prototype.deleteItem = function(id){
-	var foundItemAtIndex = -1;
+	var foundItemAtIndex = -1,
+			that = this;
 	
 	this.items.every(function(item, index){
-		if(item._id.toString() === id.toString()) {
+		if(that.matchItem(item, id)) {
 			foundItemAtIndex = index;
 			return false;
 		}
@@ -56,6 +59,10 @@ Backlog.prototype.deleteItem = function(id){
 		return true;
 	}
 	return false;
+};
+
+Backlog.prototype.matchItem = function(item, id){
+	return item._id.toString() === id.toString(); //_id is object containing GUID
 };
 
 module.exports = Backlog;

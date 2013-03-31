@@ -69,13 +69,21 @@ describe("Backlog", function(){
     });
 
     it("two labels - should add BOTH labels to item", function(){
-      var b = createBacklog({ items : [{ _id : "a"}]});
+      var b = createBacklog({ items : [{ _id : "b"}, { _id : "a"}, { _id : "c"}]});
 
       b.addLabelToItem({"a" : {labels : ["b", "c"]}});
 
-      assert.include(b.items[0].labels, "b");
-      assert.include(b.items[0].labels, "c");
-      assert.equal(b.items[0].labels.length, 2);
+      assert.include(b.items[1].labels, "b");
+      assert.include(b.items[1].labels, "c");
+      assert.equal(b.items[1].labels.length, 2);
+    });
+
+    it("one label to non existing item - should not add label", function(){
+      var b = createBacklog({ items : [{ _id : "a"}]});
+
+      b.addLabelToItem({"b" : {labels : ["b"]}});
+
+      assert.equal(b.items[0].labels, undefined);
     });
   });
 
