@@ -6,6 +6,12 @@
   }
 }
 
+.loader
+{
+  background: url(/img/ajax-loader.gif) top left no-repeat;
+  min-height: 16px;
+}
+
 .btn
 {
   margin-right:4px;
@@ -43,7 +49,8 @@ table.backlog-items td
   vertical-align: middle;
 }
 
-.backlog-items .selected
+.backlog-items .selected,
+.backlog-items .active
 {
   background-color:#FFC;
 }

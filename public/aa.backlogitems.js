@@ -1,5 +1,5 @@
 var aa = aa || {};
-
+console.log("loaded");
 aa.backlogitems = (function(){
   var _container,
       _toolbar;
@@ -9,6 +9,48 @@ aa.backlogitems = (function(){
       $(this).parents("tr").toggleClass("selected");
       toggleToolbar();      
     });
+
+    window.onhashchange = function () {
+        navigateToItem(window.location.hash);
+    };
+
+    _container.on("click", "a", function(e){
+      e.preventDefault();
+
+      window.location.hash = $(this).attr("id");
+    });
+
+    if(window.location.hash){
+      navigateToItem(window.location.hash);
+    }
+  };
+
+  var setActiveItem = function(item){
+    $(".backlog-items .active").removeClass("active");
+    item.parents("tr").addClass("active");
+  };
+
+  var navigateToItem = function(id){
+    var item = $(id);
+    setActiveItem(item);
+    displayItem(item.attr("href"));
+  };
+
+  var displayItem = function(url){
+    var itemDisplay = $("#item-display");
+    var finished = false;
+
+     setTimeout(function(){
+        if(!finished){
+          itemDisplay.addClass("loader");
+        }
+      }, 50);      
+
+      $.get(url, function(data){
+        finished = true;
+        itemDisplay.removeClass("loader");
+        itemDisplay.html(data);
+      });
   };
 
   var toggleToolbar = function(){
