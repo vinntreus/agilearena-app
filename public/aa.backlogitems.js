@@ -5,9 +5,9 @@ aa.backlogitems = (function(){
       _toolbar;
 
   var _initSelectItems = function(){    
-    _container.on("click", "input[type='checkbox']", function(e){
+    _container.on("click", "tbody input[type='checkbox']", function(e){
       $(this).parents("tr").toggleClass("selected");
-      toggleToolbar();      
+      toggleToolbar();
     });
 
     window.onhashchange = function () {
@@ -16,14 +16,18 @@ aa.backlogitems = (function(){
 
     _container.on("click", "a", function(e){
       e.preventDefault();
-
       window.location.hash = $(this).attr("id");
+    });
+
+    $("#item-selector").on("click", function(){
+      $(this).prop("checked") ? selectEveryItem() : clearSelection();
+      toggleToolbar();
     });
 
     if(window.location.hash){
       navigateToItem(window.location.hash);
     }
-  };
+  };  
 
   var setActiveItem = function(item){
     $(".backlog-items .active").removeClass("active");
@@ -112,6 +116,16 @@ aa.backlogitems = (function(){
     return labels;
   };
 
+  var clearSelection = function(){
+    $(".backlog-items .selected").removeClass("selected");
+    $(".backlog-items input[type='checkbox']").prop("checked", false);
+  };
+
+  var selectEveryItem = function(){
+    $(".backlog-items tbody tr").addClass("selected");
+    $(".backlog-items input[type='checkbox']").prop("checked", true);
+  };
+
   return {
     init : function(){
       _container = $(".backlog-items");
@@ -123,9 +137,6 @@ aa.backlogitems = (function(){
     getSelectedItemsId : getSelectedItemsId,
     setLabels : setLabels,
     getLabels : getLabels,
-    clearSelection : function(){
-      $(".backlog-items .selected").removeClass("selected");
-      $(".backlog-items input[type='checkbox']").prop("checked", false);
-    }
+    clearSelection : clearSelection
   };
 }());
