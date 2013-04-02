@@ -45,7 +45,7 @@ aa.labels = (function(){
         matches : matches,
         exactMatch : exactMatch,
         query : query
-      }
+      };
     }    
   };
 }());
@@ -192,7 +192,7 @@ aa.labelSearch = (function(){
       setupEvents();  
     },
     search : search
-  }
+  };
 }());
 
 aa.backlogLabels = (function(){
@@ -207,6 +207,10 @@ aa.backlogLabels = (function(){
       backlog_id : $("#add_label_backlog_id").val(),
       items : {}
     };
+    var label;
+    var applyLabel = function(item){
+      data.items[item].labels.push(i);
+    };    
     
     //init selection without labels
     aa.backlogitems.getSelectedItemsId().forEach(function(i){
@@ -215,16 +219,14 @@ aa.backlogLabels = (function(){
 
     //apply selected labels
     for(var i in labels.selectedLabels){
-      var label = labels.selectedLabels[i];
+      label = labels.selectedLabels[i];
       if(label.all){ //should label be applied to complete selection
         for(var j in data.items){ //apply label on every selected item
           data.items[j].labels.push(i);
         }
       }
       else{
-        label.items.forEach(function(l){ //apply label on certain items
-          data.items[l].labels.push(i);
-        });
+        label.items.forEach(applyLabel); //apply label on certain items        
       }
     }    
     
@@ -257,7 +259,7 @@ aa.backlogLabels = (function(){
     $("#add_label_textfield").val('');
     $("#add_label_textfield").focus();
     _searcher.search();
-  }
+  };
 
   return {
     init : function(labelData){      

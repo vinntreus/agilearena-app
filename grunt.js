@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
     },
     lint: {
-      files: ['grunt.js', 'domain/**/*.js', 'ui/**/*.js']
+      files: ['grunt.js', 'domain/**/*.js', 'ui/**/*.js', 'public/aa.*.js']
     },
     simplemocha: {
       all: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['<config:lint.files>','test/**/*.js' ],
-      tasks: 'lint simplemocha'
+      tasks: 'lint test'
     },
     jshint: {
       options: {
@@ -67,11 +67,15 @@ module.exports = function(grunt) {
         eqnull: true
       },
       globals: {
+        "setTimeout" : true,
+        "window" : true,
+        "alert" : true,
+        "_" : true,
+        "$" : true,
         jQuery: true,
         module: true,
         require: true,
-        exports : true,
-        console : true,
+        exports : true,        
         NODE_APPDIR : true
       }
     },
@@ -82,7 +86,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-mincss');
 
   // Default task.
-  grunt.registerTask('default', 'lint simplemocha');
+  grunt.registerTask('default', 'lint test');
 
   grunt.registerTask('replay', 'Clears readstore and replay events', function(){
     grunt.log.writeln('Starting to clear readstore...');

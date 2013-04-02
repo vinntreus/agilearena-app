@@ -20,7 +20,11 @@ aa.backlogitems = (function(){
     });
 
     $("#item-selector").on("click", function(){
-      $(this).prop("checked") ? selectEveryItem() : clearSelection();
+      if($(this).prop("checked")){
+        selectEveryItem();
+      } else{
+        clearSelection();
+      }
       toggleToolbar();
     });
 
@@ -58,8 +62,12 @@ aa.backlogitems = (function(){
   };
 
   var toggleToolbar = function(){
-    var showToolbar = _getSelected().length > 0;    
-    showToolbar ? _toolbar.show() : _toolbar.hide();    
+    var showToolbar = getSelected().length > 0;    
+    if(showToolbar){
+      _toolbar.show();
+    } else{
+      _toolbar.hide();
+    }
   };  
 
   var setSortOrder = function(){
@@ -68,20 +76,20 @@ aa.backlogitems = (function(){
     _.each(items, function(i){
       $(i).text(sortorder++);
     });    
-  }
+  };
 
-  var _getSelected = function(){
+  var getSelected = function(){
     return $(".selected", _container);
-  }
+  };
 
   var getSelectedItemsId = function(){
-    return _getSelected().map(function(){
+    return getSelected().map(function(){
       return $(this).data("id");
     }).get();    
   };
 
   var setLabels = function(labelData){
-    var items = _getSelected();
+    var items = getSelected();
     items.each(function(index){
       var item = $(this);      
       var id = item.data('id');
@@ -96,7 +104,7 @@ aa.backlogitems = (function(){
   };
 
   var getLabels = function(){
-    var selectedItems = _getSelected();
+    var selectedItems = getSelected();
     var labelElements = selectedItems.find(".label");
     var labels = {};
     _.each(labelElements, function(l){
@@ -137,6 +145,7 @@ aa.backlogitems = (function(){
     getSelectedItemsId : getSelectedItemsId,
     setLabels : setLabels,
     getLabels : getLabels,
-    clearSelection : clearSelection
+    clearSelection : clearSelection,
+    getSelected : getSelected
   };
 }());

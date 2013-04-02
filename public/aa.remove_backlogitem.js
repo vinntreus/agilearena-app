@@ -1,12 +1,14 @@
 var aa = aa || {}; 
 
 aa.removeBacklogItem = (function(){
-  
+  var items = aa.backlogitems;
+
   var getItems = function(){
     return $(".backlog-items .selected");
-  }
+  };
+
   var removeItems = function(){
-    var selection = getItems();
+    var selection = items.getSelected();
     var itemIds = _.map(selection, function(s){
       return $(s).data("id");
     });
@@ -25,8 +27,8 @@ aa.removeBacklogItem = (function(){
     _.each(selection, function(item){
       $(item).remove();
     });
-    aa.backlogitems.setSortOrder();
-    aa.backlogitems.toggleToolbar();
+    items.setSortOrder();
+    items.toggleToolbar();
   };
 
   var initEvents = function(){    
@@ -39,5 +41,5 @@ aa.removeBacklogItem = (function(){
     init : function(){
       initEvents();      
     }
-  }
+  };
 }());
