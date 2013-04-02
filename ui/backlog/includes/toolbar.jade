@@ -1,14 +1,14 @@
 div.toolbar.btn-toolbar
-  div.toolbar-container    
-    div.btn-group
-      button.btn.btn-danger(id='remove_backlogitem') Delete
+  div.toolbar-container
     div.btn-group
       button.btn.dropdown-toggle(data-toggle='dropdown', id='toggle_labels') Label 
         span.caret
       ul.dropdown-menu(id='label-menu', data-url='/backlog-item/label')
         li
           form.form-inline(method='post', action='/backlog/label', id='add_label_form')
-            input(type="hidden", id='add_label_backlog_id', name='backlog_id', value='#{backlog._id}')  
+            input(type="hidden", id='add_label_backlog_id', name='backlog_id', value='#{backlog._id}')
             input(type="text", id='add_label_textfield', name='label', autocomplete='off')
         li
           ul#labels
+    div.btn-group
+      button.btn.btn-danger(id='remove_backlogitem') Delete
