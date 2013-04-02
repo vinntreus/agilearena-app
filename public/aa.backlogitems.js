@@ -1,5 +1,5 @@
 var aa = aa || {};
-console.log("loaded");
+
 aa.backlogitems = (function(){
   var _container,
       _toolbar;
