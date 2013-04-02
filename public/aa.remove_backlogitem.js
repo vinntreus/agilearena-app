@@ -3,10 +3,6 @@ var aa = aa || {};
 aa.removeBacklogItem = (function(){
   var items = aa.backlogitems;
 
-  var getItems = function(){
-    return $(".backlog-items .selected");
-  };
-
   var removeItems = function(){
     var selection = items.getSelected();
     var itemIds = _.map(selection, function(s){
